@@ -143,8 +143,8 @@ export default function TermsOfService() {
                     https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-14B
                   </li>
                   <li>
-                    Meta-Llama-3.1-70B-Instruct-AWQ-INT4:
-                    https://huggingface.co/hugging-quants/Meta-Llama-3.1-70B-Instruct-AWQ-INT4
+                    openai/gpt-oss-20b:
+                    https://huggingface.co/openai/gpt-oss-20b
                   </li>
                 </ol>
               </section>

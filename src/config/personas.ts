@@ -6,7 +6,7 @@ export interface Persona {
   model: string;
 }
 
-export const DEFAULT_MODEL = "meta-llama/Llama-3.2-3B-Instruct";
+export const DEFAULT_MODEL = "openai/gpt-oss-20b";
 
 export const personas: Persona[] = [
   {

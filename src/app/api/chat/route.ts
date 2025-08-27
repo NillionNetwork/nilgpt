@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     }
 
     const response = await fetch(
-      `${process.env.NILAI_API_URL}/v1/chat/completions`,
+      `${process.env.NILAI_API2_URL}/v1/chat/completions`,
       {
         method: "POST",
         headers: {
