@@ -50,7 +50,7 @@ export async function POST(req: Request) {
         body: JSON.stringify({
           model: model,
           messages: messages,
-          temperature: 0.2,
+          temperature: 0.8,
           stream: stream,
           max_tokens: 1100,
           web_search: false,
