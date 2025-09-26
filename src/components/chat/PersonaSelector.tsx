@@ -34,6 +34,7 @@ const PersonaSelector: React.FC<PersonaSelectorProps> = ({
   } = useApp();
   const { createChat, isCreatingChat } = useCreateChat();
   const [isOpen, setIsOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const pathname = usePathname();
 
   // Get current chat ID from pathname
@@ -75,6 +76,30 @@ const PersonaSelector: React.FC<PersonaSelectorProps> = ({
     };
   }, []);
 
+  useEffect(() => {
+    const checkTheme = () => {
+      const isDark =
+        document.documentElement.classList.contains("theme-dark-blue") ||
+        document.documentElement.classList.contains("theme-dark-sepia");
+      console.log("PersonaSelector theme check:", {
+        classes: document.documentElement.className,
+        isDark,
+      });
+      setIsDarkMode(isDark);
+    };
+
+    checkTheme();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const handlePersonaChange = (persona: PersonaOption) => {
     if (disabled) return;
     setSelectedPersona(persona.id);
@@ -98,7 +123,7 @@ const PersonaSelector: React.FC<PersonaSelectorProps> = ({
                 }
                 setIsOpen(!isOpen);
               }}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-neutral-100 transition-colors ${
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-[var(--accent)] transition-colors text-[var(--foreground)] ${
                 disabled ? "opacity-50" : ""
               }`}
             >
@@ -106,21 +131,21 @@ const PersonaSelector: React.FC<PersonaSelectorProps> = ({
                 {selectedPersona.name}
               </span>
               <ChevronDown
-                className={`transition-transform text-neutral-600 ${isOpen ? "rotate-180" : ""}`}
+                className={`transition-transform text-[var(--muted-foreground)] ${isOpen ? "rotate-180" : ""}`}
                 size={18}
               />
             </button>
           </div>
         </HoverCardTrigger>
         {disabled && (
-          <HoverCardContent className="w-auto p-4">
+          <HoverCardContent className="w-auto p-4 bg-[var(--popover)] text-[var(--popover-foreground)] border-[var(--border)]">
             <div className="flex flex-col gap-2">
-              <p className="text-xs text-neutral-500">
+              <p className="text-xs text-[var(--muted-foreground)]">
                 Create a new chat to change mode
               </p>
               <button
                 type="button"
-                className="bg-[#000201] hover:bg-[#000201]/80 transition-colors rounded-md px-4 py-2 flex items-center gap-2 justify-center"
+                className="bg-[var(--primary)] hover:bg-[var(--primary)]/80 transition-colors rounded-md px-4 py-2 flex items-center gap-2 justify-center"
                 onClick={(e) => {
                   e.stopPropagation();
                   createChat();
@@ -128,10 +153,15 @@ const PersonaSelector: React.FC<PersonaSelectorProps> = ({
                 disabled={isCreatingChat}
               >
                 {isCreatingChat ? (
-                  <Loader2 className="animate-spin text-white" size={16} />
+                  <Loader2
+                    className="animate-spin text-[var(--primary-foreground)]"
+                    size={16}
+                  />
                 ) : (
                   <>
-                    <span className="text-sm text-white">New Chat</span>
+                    <span className="text-sm text-[var(--primary-foreground)]">
+                      New Chat
+                    </span>
                     <PlusIcon className="text-[#FFC971]" size={16} />
                   </>
                 )}
@@ -142,22 +172,30 @@ const PersonaSelector: React.FC<PersonaSelectorProps> = ({
       </HoverCard>
 
       {isOpen && !disabled && (
-        <div className="absolute right-0 z-50 mt-2 w-64 origin-top-right rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <div className="absolute right-0 z-50 mt-2 w-64 origin-top-right rounded-lg bg-[var(--card)] shadow-lg ring-1 ring-[var(--border)] focus:outline-none">
           <div className="py-1 max-h-64 overflow-y-auto">
             {personas.map((persona) => (
               <button
                 key={persona.id}
-                className={`block w-full text-left px-4 py-3 text-sm hover:bg-neutral-50 ${
+                className={`block w-full text-left px-4 py-3 text-sm ${
+                  isDarkMode ? "hover:bg-gray-600" : "hover:bg-[var(--accent)]"
+                } ${
                   currentPersonaId === persona.id
-                    ? "text-neutral-900 bg-neutral-50"
-                    : "text-neutral-700"
+                    ? "text-[var(--foreground)] bg-[var(--accent)]"
+                    : "text-[var(--foreground)]"
                 }`}
-                onClick={() => handlePersonaChange(persona)}
+                onClick={() => {
+                  console.log("PersonaSelector button clicked:", {
+                    isDarkMode,
+                    persona: persona.name,
+                  });
+                  handlePersonaChange(persona);
+                }}
               >
                 <div className="flex justify-between items-center gap-3">
                   <div className="min-w-0 flex-1">
                     <div className="font-medium truncate">{persona.name}</div>
-                    <div className="text-xs text-neutral-500 mt-1 line-clamp-2">
+                    <div className="text-xs text-[var(--muted-foreground)] mt-1 line-clamp-2">
                       {persona.description}
                     </div>
                   </div>

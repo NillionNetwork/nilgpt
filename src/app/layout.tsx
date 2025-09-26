@@ -34,6 +34,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script src="/theme-loader.js" />
+      </head>
       <body className="font-body antialiased">
         <Toaster />
         {children}

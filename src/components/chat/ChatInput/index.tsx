@@ -25,6 +25,16 @@ const ChatInput: React.FC<IChatInputProps> = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setSelectedPersona, hasMessages, selectedPersona } = useApp();
 
+  // Detect current theme
+  const getCurrentTheme = () => {
+    if (typeof document === "undefined") return "light";
+    return document.documentElement.classList.contains("theme-dark-blue")
+      ? "dark-blue"
+      : document.documentElement.classList.contains("theme-dark-sepia")
+        ? "dark-sepia"
+        : "light";
+  };
+
   const [input, setInput] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const [wasLoading, setWasLoading] = useState(false);
@@ -176,7 +186,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit} className="relative flex flex-col">
-        <div className="relative bg-white border border-neutral-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 p-4 pb-2">
+        <div className="relative bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 p-4 pb-2">
           {imageContent.length > 0 && (
             <div className="mb-2 relative flex self-end w-fit">
               <Image
@@ -198,7 +208,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
           {pdfTextContent && (
             <div className="mb-2 relative flex self-end w-fit">
               <div className="flex flex-col items-center gap-2 relative">
-                <FileTextIcon size={24} />
+                <FileTextIcon size={24} className="text-[var(--foreground)]" />
                 <span className="text-[6px] font-bold font-mono text-black bg-white absolute bottom-0 mx-auto">
                   PDF
                 </span>
@@ -222,7 +232,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
               placeholder={
                 isAuthenticated ? placeholder : "Please sign in to chat."
               }
-              className="w-full bg-transparent text-neutral-800 placeholder-neutral-400 resize-none focus:outline-none text-base leading-6 min-h-[36px] max-h-32 overflow-y-auto"
+              className="w-full bg-transparent text-[var(--foreground)] placeholder-[var(--muted-foreground)] resize-none focus:outline-none text-base leading-6 min-h-[36px] max-h-32 overflow-y-auto"
               style={{
                 scrollbarWidth: "none",
                 height: "auto",
@@ -253,7 +263,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
                 disabled={areFilePickersLoading || pdfContent?.length > 0}
                 className="outline-none p-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <ImageIcon size={18} />
+                <ImageIcon size={18} className="text-[var(--foreground)]" />
               </button>
               <button
                 type="button"
@@ -261,7 +271,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
                 disabled={areFilePickersLoading || imageContent?.length > 0}
                 className="outline-none p-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center flex-col relative"
               >
-                <FileTextIcon size={18} />
+                <FileTextIcon size={18} className="text-[var(--foreground)]" />
                 <span className="text-[6px] font-bold font-mono text-black bg-white absolute bottom-0 right-0 left-0">
                   PDF
                 </span>
@@ -282,8 +292,12 @@ const ChatInput: React.FC<IChatInputProps> = ({
                 }
                 className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors duration-200 ${
                   input.trim() && !isOverLimit && isAuthenticated
-                    ? "bg-neutral-800 text-yellow-400 hover:bg-neutral-700"
-                    : "bg-neutral-300 text-neutral-500"
+                    ? getCurrentTheme() === "light"
+                      ? "bg-neutral-800 text-yellow-400 hover:bg-neutral-700"
+                      : "bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary)]/80"
+                    : getCurrentTheme() === "light"
+                      ? "bg-neutral-300 text-neutral-500"
+                      : "bg-[var(--muted)] text-[var(--muted-foreground)]"
                 }`}
               >
                 <svg

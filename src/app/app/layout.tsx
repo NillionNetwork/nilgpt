@@ -8,6 +8,7 @@ import SidebarIcon from "@/components/chat/SidebarIcon";
 import SignInButton from "@/components/chat/SignInButton";
 import SignOutButton from "@/components/chat/SignOutButton";
 import SignUpButton from "@/components/chat/SignUpButton";
+import SimpleThemeSelector from "@/components/SimpleThemeSelector";
 import UserCreationHandler from "@/components/UserCreationHandler";
 import { AppProvider, useApp } from "@/contexts/AppContext";
 import { UnifiedAuthProvider, useAuth } from "@/contexts/UnifiedAuthProvider";
@@ -20,7 +21,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   const { isSidebarCollapsed, toggleSidebar } = useApp();
 
   return (
-    <div className="flex bg-[#F7F6F2] h-screen overflow-hidden">
+    <div className="flex bg-[var(--background)] h-screen overflow-hidden">
       <div
         className={`
               transition-all duration-300 ease-in-out 
@@ -32,7 +33,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
       </div>
 
       <div className="flex-1 flex flex-col min-w-0">
-        <div className="flex-shrink-0 h-20 flex flex-row justify-between items-center px-4 py-4 bg-[#F7F6F2] z-10">
+        <div className="flex-shrink-0 h-20 flex flex-row justify-between items-center px-4 py-4 bg-[var(--background)] z-10">
           <div className="flex items-center">
             <SidebarIcon
               isCollapsed={isSidebarCollapsed}
@@ -40,7 +41,8 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
             />
           </div>
 
-          <div>
+          <div className="flex items-center gap-3">
+            <SimpleThemeSelector />
             {user ? (
               <SignOutButton onSignOut={() => signOut()} />
             ) : (

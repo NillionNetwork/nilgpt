@@ -25,6 +25,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
   const [messages, setMessages] = useState<IChatMessage[]>(initialMessages);
   const [chatId, setChatId] = useState<string | null>(initialChatId);
   const [isUpdatingChat, setIsUpdatingChat] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const chatIdRef = useRef<string | null>(initialChatId);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -274,6 +275,27 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
     scrollToBottom();
   }, [messages, isStreaming, scrollToBottom]);
 
+  // Theme detection
+  useEffect(() => {
+    const checkTheme = () => {
+      const isDark =
+        document.documentElement.classList.contains("theme-dark-blue") ||
+        document.documentElement.classList.contains("theme-dark-sepia");
+      setIsDarkMode(isDark);
+    };
+
+    checkTheme();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     setHasMessages(messages.length > 0);
   }, [messages, setHasMessages]);
@@ -504,7 +526,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F7F6F2]">
+    <div className="flex flex-col h-full bg-[var(--background)]">
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center px-4">
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
@@ -528,10 +550,10 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
                       onClick={() =>
                         handleSendMessage({ content: suggestion.text })
                       }
-                      className="flex items-center space-x-2 p-3 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 text-left group w-fit"
+                      className="flex items-center space-x-2 p-3 bg-[var(--card)] border border-[var(--border)] rounded-xl hover:bg-[var(--accent)] hover:border-[var(--ring)] transition-all duration-200 text-left group w-fit"
                     >
                       <div className="text-lg">{suggestion.emoji}</div>
-                      <span className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
+                      <span className="text-sm font-medium text-[var(--muted-foreground)] group-hover:text-[var(--foreground)]">
                         {suggestion.text}
                       </span>
                     </button>
@@ -565,7 +587,9 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
               {isLoading && !isStreaming && (
                 <RefreshCwIcon
                   size={16}
-                  className="animate-spin text-neutral-600 mx-6 my-2"
+                  className={`animate-spin mx-6 my-2 ${
+                    isDarkMode ? "text-white" : "text-neutral-600"
+                  }`}
                 />
               )}
             </div>

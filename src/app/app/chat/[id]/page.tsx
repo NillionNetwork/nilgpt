@@ -22,6 +22,7 @@ export default function ChatPage({ params }: ChatPageProps) {
   const [hasDecryptionFailures, setHasDecryptionFailures] = useState(false);
   const [showSecretKeyModal, setShowSecretKeyModal] = useState(false);
   const [passphraseLoaded, setPassphraseLoaded] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const { user } = useAuth();
   const { decryptWithStatus, hasSecretKey } = useEncryption();
 
@@ -45,6 +46,27 @@ export default function ChatPage({ params }: ChatPageProps) {
       setPassphraseLoaded(true);
     }
   }, [userSecretKeySeed]);
+
+  // Theme detection
+  useEffect(() => {
+    const checkTheme = () => {
+      const isDark =
+        document.documentElement.classList.contains("theme-dark-blue") ||
+        document.documentElement.classList.contains("theme-dark-sepia");
+      setIsDarkMode(isDark);
+    };
+
+    checkTheme();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const fetchChatMessages = async (chatId: string) => {
@@ -113,8 +135,16 @@ export default function ChatPage({ params }: ChatPageProps) {
     return (
       <div className="flex items-center justify-center h-full p-6">
         <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
-          <p className="text-gray-600 text-center">
+          <div
+            className={`animate-spin rounded-full h-12 w-12 border-b-2 mb-4 ${
+              isDarkMode ? "border-white" : "border-gray-900"
+            }`}
+          ></div>
+          <p
+            className={`text-center ${
+              isDarkMode ? "text-[var(--muted-foreground)]" : "text-gray-600"
+            }`}
+          >
             {!passphraseLoaded ? "Loading..." : "Loading messages..."}
           </p>
         </div>
@@ -127,8 +157,18 @@ export default function ChatPage({ params }: ChatPageProps) {
     return (
       <div className="flex items-center justify-center h-full p-6">
         <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
-          <p className="text-gray-600 text-center">Loading...</p>
+          <div
+            className={`animate-spin rounded-full h-12 w-12 border-b-2 mb-4 ${
+              isDarkMode ? "border-white" : "border-gray-900"
+            }`}
+          ></div>
+          <p
+            className={`text-center ${
+              isDarkMode ? "text-[var(--muted-foreground)]" : "text-gray-600"
+            }`}
+          >
+            Loading...
+          </p>
         </div>
       </div>
     );
@@ -184,8 +224,18 @@ export default function ChatPage({ params }: ChatPageProps) {
         ) : (
           <div className="flex items-center justify-center h-full p-6">
             <div className="flex flex-col items-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
-              <p className="text-gray-600 text-center">
+              <div
+                className={`animate-spin rounded-full h-12 w-12 border-b-2 mb-4 ${
+                  isDarkMode ? "border-white" : "border-gray-900"
+                }`}
+              ></div>
+              <p
+                className={`text-center ${
+                  isDarkMode
+                    ? "text-[var(--muted-foreground)]"
+                    : "text-gray-600"
+                }`}
+              >
                 Please enter your passphrase to continue...
               </p>
             </div>

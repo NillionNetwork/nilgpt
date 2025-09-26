@@ -398,7 +398,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
     <div
       className={`
         h-full w-[280px]
-        bg-[#000201] flex flex-col
+        bg-[var(--sidebar-bg)] flex flex-col
         fixed inset-y-0 left-0 z-40
         md:relative md:inset-auto md:left-auto
         overflow-hidden
@@ -438,16 +438,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
           <button
             data-umami-event="New Chat Clicked"
             disabled={!user}
-            className={`w-full text-sm font-medium text-white transition-colors text-left px-4 py-1 rounded-lg
+            className={`w-full text-sm font-medium text-[var(--sidebar-text)] transition-colors text-left px-4 py-1 rounded-lg
               ${
                 !user
                   ? "opacity-50 cursor-not-allowed hover:bg-transparent"
-                  : "hover:bg-[#333534]"
+                  : "hover:bg-[var(--sidebar-hover)]"
               }`}
             onClick={() => createChat()}
           >
             <div className="flex flex-row justify-between items-center  ">
-              <div className="text-white text-center text-md ">New Chat</div>
+              <div className="text-[var(--sidebar-text)] text-center text-md ">
+                New Chat
+              </div>
               <div className="font-normal text-3xl text-[#FFC971] p-0 m-0">
                 +
               </div>
@@ -483,8 +485,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
                     key={chat._id}
                     className={`w-full flex items-center justify-between text-left px-4 py-2 text-md rounded-md group relative ${
                       isActive
-                        ? "bg-[#333534] text-white"
-                        : "text-white hover:bg-[#333534]"
+                        ? "bg-[var(--sidebar-accent)] text-[var(--sidebar-text)]"
+                        : "text-[var(--sidebar-text)] hover:bg-[var(--sidebar-accent)]"
                     }`}
                   >
                     {isEditing ? (
@@ -501,7 +503,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
                                 handleCancelRename();
                               }
                             }}
-                            className="flex-1 bg-transparent text-white border border-[#555] rounded px-2 py-1 text-sm focus:outline-none focus:border-[#FFC971] w-full"
+                            className="flex-1 bg-transparent text-[var(--sidebar-text)] border border-[var(--border)] rounded px-2 py-1 text-sm focus:outline-none focus:border-[#FFC971] w-full"
                             maxLength={50}
                             autoFocus
                           />
@@ -623,15 +625,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
             >
               {initials}
             </button>
-            <span className="text-md text-white truncate">{userName}</span>
+            <span className="text-md text-[var(--sidebar-text)] truncate">
+              {userName}
+            </span>
           </div>
 
           {/* User Menu Dropdown */}
           {isUserMenuOpen && (
-            <div className="absolute bottom-full left-4 right-4 mb-2 bg-[#2a2a2a] border border-[#444] rounded-lg shadow-lg z-50">
+            <div className="absolute bottom-full left-4 right-4 mb-2 bg-[var(--sidebar-accent)] border border-[var(--border-color)] rounded-lg shadow-lg z-50">
               <button
                 onClick={handleChangePassphrase}
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-[#333] rounded-t-lg transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] rounded-t-lg transition-colors"
                 data-umami-event="Change Passphrase Clicked"
               >
                 <Shield size={16} />
@@ -639,7 +643,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
               </button>
               <button
                 onClick={handleViewAttestation}
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-[#333] transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] transition-colors"
                 data-umami-event="View Attestation Clicked"
               >
                 <ShieldCheck size={16} />
@@ -647,7 +651,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
               </button>
               <button
                 onClick={handleSignOut}
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-[#333] rounded-b-lg transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-[var(--sidebar-hover)] rounded-b-lg transition-colors"
                 data-umami-event="Sign Out Clicked"
               >
                 <LogOut size={16} />

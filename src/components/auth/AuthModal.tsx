@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/UnifiedAuthProvider";
 import WalletButton from "./WalletButton";
 
@@ -19,7 +19,28 @@ export default function AuthModal({
   const [error, setError] = useState("");
   const [keepMePosted, setKeepMePosted] = useState(false);
   const [showEmailConfirmation, setShowEmailConfirmation] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const { signIn, signUp } = useAuth();
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const isDark =
+        document.documentElement.classList.contains("theme-dark-blue") ||
+        document.documentElement.classList.contains("theme-dark-sepia");
+      setIsDarkMode(isDark);
+    };
+
+    checkTheme();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,9 +62,25 @@ export default function AuthModal({
   if (showEmailConfirmation) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-          <h2 className="text-2xl font-bold mb-4">Check your email</h2>
-          <p className="text-gray-600 mb-6">
+        <div
+          className={`rounded-lg p-8 max-w-md w-full mx-4 ${
+            isDarkMode
+              ? "bg-[var(--card)] text-[var(--card-foreground)]"
+              : "bg-white"
+          }`}
+        >
+          <h2
+            className={`text-2xl font-bold mb-4 ${
+              isDarkMode ? "text-[var(--foreground)]" : ""
+            }`}
+          >
+            Check your email
+          </h2>
+          <p
+            className={`mb-6 ${
+              isDarkMode ? "text-[var(--muted-foreground)]" : "text-gray-600"
+            }`}
+          >
             We&apos;ve sent a confirmation link to{" "}
             <span className="font-medium">{email}</span>. Please check your
             email to complete your registration.
@@ -63,46 +100,82 @@ export default function AuthModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-        <h2 className="text-2xl font-bold mb-6">
+      <div
+        className={`rounded-lg p-8 max-w-md w-full mx-4 ${
+          isDarkMode
+            ? "bg-[var(--card)] text-[var(--card-foreground)]"
+            : "bg-white"
+        }`}
+      >
+        <h2
+          className={`text-2xl font-bold mb-6 ${
+            isDarkMode ? "text-[var(--foreground)]" : ""
+          }`}
+        >
           {mode === "signin" ? "Sign In" : "Sign Up"}
         </h2>
         <form onSubmit={handleSubmit}>
           {mode === "signup" && (
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                className={`block text-sm font-medium mb-2 ${
+                  isDarkMode
+                    ? "text-[var(--muted-foreground)]"
+                    : "text-gray-700"
+                }`}
+              >
                 Username
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                className={`w-full px-3 py-2 border rounded-md ${
+                  isDarkMode
+                    ? "bg-[var(--card)] border-[var(--border)] text-[var(--foreground)]"
+                    : "border-gray-300"
+                }`}
                 required
               />
             </div>
           )}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              className={`block text-sm font-medium mb-2 ${
+                isDarkMode ? "text-[var(--muted-foreground)]" : "text-gray-700"
+              }`}
+            >
               Email
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className={`w-full px-3 py-2 border rounded-md ${
+                isDarkMode
+                  ? "bg-[var(--card)] border-[var(--border)] text-[var(--foreground)]"
+                  : "border-gray-300"
+              }`}
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              className={`block text-sm font-medium mb-2 ${
+                isDarkMode ? "text-[var(--muted-foreground)]" : "text-gray-700"
+              }`}
+            >
               Password
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className={`w-full px-3 py-2 border rounded-md ${
+                isDarkMode
+                  ? "bg-[var(--card)] border-[var(--border)] text-[var(--foreground)]"
+                  : "border-gray-300"
+              }`}
               required
             />
           </div>
@@ -114,7 +187,13 @@ export default function AuthModal({
                 checked={keepMePosted}
                 onChange={(e) => setKeepMePosted(e.target.checked)}
               />
-              <span className="items-start text-[10px] text-gray-600">
+              <span
+                className={`items-start text-[10px] ${
+                  isDarkMode
+                    ? "text-[var(--muted-foreground)]"
+                    : "text-gray-600"
+                }`}
+              >
                 Keep me posted on what&apos;s new via marketing emails
               </span>
             </label>
@@ -122,7 +201,13 @@ export default function AuthModal({
           <WalletButton onClose={onClose} />
           {mode === "signup" && (
             <div className="mb-6">
-              <p className="text-sm text-gray-600">
+              <p
+                className={`text-sm ${
+                  isDarkMode
+                    ? "text-[var(--muted-foreground)]"
+                    : "text-gray-600"
+                }`}
+              >
                 By agreeing to sign up you are agreeing to the{" "}
                 <Link
                   href="/terms-services"
@@ -145,7 +230,11 @@ export default function AuthModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+              className={`px-4 py-2 text-sm font-medium ${
+                isDarkMode
+                  ? "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                  : "text-gray-700 hover:text-gray-900"
+              }`}
             >
               Cancel
             </button>
