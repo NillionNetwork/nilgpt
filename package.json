@@ -1,6 +1,6 @@
 {
   "name": "nil-gpt",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@nillion/blindfold": "0.1.0",
-    "@nillion/nuc": "^0.1.0",
-    "@nillion/secretvaults": "0.1.2-rc.4",
+    "@nillion/nuc": "^0.1.1",
+    "@nillion/secretvaults": "0.1.7",
     "@privy-io/react-auth": "^2.18.0",
     "@privy-io/server-auth": "^1.31.1",
     "@radix-ui/react-accordion": "^1.2.12",

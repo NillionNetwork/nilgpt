@@ -36,12 +36,14 @@ const Footer = () => (
             >
               Terms of Service
             </a>
-            <Link
-              href="/privacy-policy"
+            <a
+              href="https://nillion.notion.site/nilGPT-Privacy-Policy-2261827799b48083b211d957d127d911"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-gray-400 hover:text-white transition-colors underline"
             >
               Privacy Policy
-            </Link>
+            </a>
             <Link
               href="/content-policy"
               className="text-gray-400 hover:text-white transition-colors underline"
@@ -123,6 +125,20 @@ const Footer = () => (
                 height={16}
               />
               nilDB
+            </a>
+            <a
+              href="https://github.com/NillionNetwork/nilcc"
+              target="_blank"
+              className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
+              rel="noopener"
+            >
+              <Image
+                src="/img/github_logo.svg"
+                alt="GitHub"
+                width={16}
+                height={16}
+              />
+              nilcc
             </a>
           </div>
         </div>
