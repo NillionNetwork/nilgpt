@@ -138,7 +138,7 @@ const Footer = () => (
                 width={16}
                 height={16}
               />
-              nilcc
+              nilCC
             </a>
           </div>
         </div>
