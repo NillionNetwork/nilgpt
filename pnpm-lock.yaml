@@ -12,11 +12,11 @@ importers:
         specifier: 0.1.0
         version: 0.1.0
       '@nillion/nuc':
-        specifier: ^0.1.0
-        version: 0.1.0(bufferutil@4.0.9)(starknet@7.6.4)(utf-8-validate@5.0.10)
+        specifier: ^0.1.1
+        version: 0.1.1(bufferutil@4.0.9)(starknet@7.6.4)(utf-8-validate@5.0.10)
       '@nillion/secretvaults':
-        specifier: 0.1.2-rc.4
-        version: 0.1.2-rc.4(@nillion/blindfold@0.1.0)(@nillion/nuc@0.1.0(bufferutil@4.0.9)(starknet@7.6.4)(utf-8-validate@5.0.10))(pino-pretty@10.3.1)(pino@7.11.0)(uuid@11.1.0)
+        specifier: 0.1.7
+        version: 0.1.7(@nillion/blindfold@0.1.0)(@nillion/nuc@0.1.1(bufferutil@4.0.9)(starknet@7.6.4)(utf-8-validate@5.0.10))(pino-pretty@10.3.1)(pino@7.11.0)(uuid@11.1.0)
       '@privy-io/react-auth':
         specifier: ^2.18.0
         version: 2.21.2(@solana/web3.js@1.98.4(bufferutil@4.0.9)(encoding@0.1.13)(typescript@5.9.2)(utf-8-validate@5.0.10))(@types/react@18.3.23)(bs58@6.0.0)(bufferutil@4.0.9)(lit@3.3.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.2)(use-sync-external-store@1.5.0(react@18.3.1))(utf-8-validate@5.0.10)(zod@3.25.76)
@@ -243,6 +243,7 @@ packages:
 
   '@cosmjs/crypto@0.33.1':
     resolution: {integrity: sha512-U4kGIj/SNBzlb2FGgA0sMR0MapVgJUg8N+oIAiN5+vl4GZ3aefmoL1RDyTrFS/7HrB+M+MtHsxC0tvEu4ic/zA==}
+    deprecated: This uses elliptic for cryptographic operations, which contains several security-relevant bugs. To what degree this affects your application is something you need to carefully investigate. See https://github.com/cosmos/cosmjs/issues/1708 for further pointers. Starting with version 0.34.0 the cryptographic library has been replaced. However, private keys might still be at risk.
 
   '@cosmjs/encoding@0.33.1':
     resolution: {integrity: sha512-nuNxf29fUcQE14+1p//VVQDwd1iau5lhaW/7uMz7V2AH3GJbFJoJVaKvVyZvdFk+Cnu+s3wCqgq4gJkhRCJfKw==}
@@ -600,15 +601,15 @@ packages:
     resolution: {integrity: sha512-tqdfoxk+lTTD9llr7iEyb49iWGGVlBDpF6erx8HWvrL6RZFrjr+0sN9XNZGB4OfFVa7ZsduXcAso1msAObMeuw==}
     engines: {node: '>=20'}
 
-  '@nillion/nuc@0.1.0':
-    resolution: {integrity: sha512-HMLmn9uN/YOHfGTcs4jkOam7faxXGnrNggpAEEE+qZBRVM62bR2olSnFPqw5cwZKA8wDThFeS1mrGiJrizobyA==}
-    engines: {node: '>=23'}
+  '@nillion/nuc@0.1.1':
+    resolution: {integrity: sha512-AvTcO05KSwuYgcSyIr0u2J3T3eWjkTHrVLAuwI3iAlZNhyEeI2wl1hr8S5GoaPrs/ANXwjsAhWmuiKP0+40p8w==}
+    engines: {node: '>=18'}
 
-  '@nillion/secretvaults@0.1.2-rc.4':
-    resolution: {integrity: sha512-wcs396hmVg0T/XiyVJ2N2Llb5vpvImWSGU4GrZy0oEoHw9rBAz5ZYzfkTizBSU1U+AsLIe6xqQ/V1YtIV791oA==}
+  '@nillion/secretvaults@0.1.7':
+    resolution: {integrity: sha512-5HRTjZfV4Zb71MYXhgK6ZZJ9YIlapWmQ+p2Z735fmBw8o4V/zpI/dBsQ4c+28R0+RjU82pxDl8Qtwn+JLMMlzQ==}
     peerDependencies:
       '@nillion/blindfold': 0.1.0
-      '@nillion/nuc': 0.1.0
+      '@nillion/nuc': 0.1.1
       pino: ^9.7.0
       pino-pretty: ^13.0.0
       uuid: ^11.1.0
@@ -4295,6 +4296,9 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
+  zod@4.1.12:
+    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
+
   zustand@5.0.3:
     resolution: {integrity: sha512-14fwWQtU3pH4dE0dOpdMiWjddcH+QzKIgk1cl8epwSE7yag43k/AD/m4L6+K7DytAOr9gGBe3/EXj9g7cdostg==}
     engines: {node: '>=12.20.0'}
@@ -4929,7 +4933,7 @@ snapshots:
       libsodium-wrappers-sumo: 0.7.15
       paillier-bigint: 3.4.3
 
-  '@nillion/nuc@0.1.0(bufferutil@4.0.9)(starknet@7.6.4)(utf-8-validate@5.0.10)':
+  '@nillion/nuc@0.1.1(bufferutil@4.0.9)(starknet@7.6.4)(utf-8-validate@5.0.10)':
     dependencies:
       '@bufbuild/protobuf': 2.6.3
       '@cosmjs/proto-signing': 0.33.1
@@ -4951,15 +4955,15 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@nillion/secretvaults@0.1.2-rc.4(@nillion/blindfold@0.1.0)(@nillion/nuc@0.1.0(bufferutil@4.0.9)(starknet@7.6.4)(utf-8-validate@5.0.10))(pino-pretty@10.3.1)(pino@7.11.0)(uuid@11.1.0)':
+  '@nillion/secretvaults@0.1.7(@nillion/blindfold@0.1.0)(@nillion/nuc@0.1.1(bufferutil@4.0.9)(starknet@7.6.4)(utf-8-validate@5.0.10))(pino-pretty@10.3.1)(pino@7.11.0)(uuid@11.1.0)':
     dependencies:
       '@nillion/blindfold': 0.1.0
-      '@nillion/nuc': 0.1.0(bufferutil@4.0.9)(starknet@7.6.4)(utf-8-validate@5.0.10)
+      '@nillion/nuc': 0.1.1(bufferutil@4.0.9)(starknet@7.6.4)(utf-8-validate@5.0.10)
       es-toolkit: 1.39.8
       pino: 7.11.0
       pino-pretty: 10.3.1
       uuid: 11.1.0
-      zod: 3.25.76
+      zod: 4.1.12
 
   '@noble/ciphers@1.2.1': {}
 
@@ -10174,6 +10178,8 @@ snapshots:
   zod@3.22.4: {}
 
   zod@3.25.76: {}
+
+  zod@4.1.12: {}
 
   zustand@5.0.3(@types/react@18.3.23)(react@18.3.1)(use-sync-external-store@1.5.0(react@18.3.1)):
     optionalDependencies:
