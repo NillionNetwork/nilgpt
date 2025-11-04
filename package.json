@@ -1,6 +1,6 @@
 {
   "name": "nil-gpt",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,6 +11,7 @@
     "postinstall": "sh -lc 'command -v git >/dev/null 2>&1 && [ -d .git ] && lefthook install || echo \"Skipping lefthook (no git or .git)\"'"
   },
   "dependencies": {
+    "@faker-js/faker": "^10.1.0",
     "@nillion/blindfold": "0.1.0",
     "@nillion/nuc": "^0.1.1",
     "@nillion/secretvaults": "0.1.7",
