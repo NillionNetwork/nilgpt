@@ -29,13 +29,14 @@ export async function getUnifiedAuth(
   } = {},
 ): Promise<UnifiedAuthResult> {
   const { requireAuth = true, allowPrivyFallback = true } = options;
+  const accessToken = request.headers.get("authorization")?.split(" ")[1];
 
   try {
     const supabase = createClient();
     const {
       data: { user },
       error: authError,
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser(accessToken);
 
     if (user && !authError) {
       return {
