@@ -29,7 +29,13 @@ export async function getUnifiedAuth(
   } = {},
 ): Promise<UnifiedAuthResult> {
   const { requireAuth = true, allowPrivyFallback = true } = options;
-  const accessToken = request.headers.get("authorization")?.split(" ")[1];
+  let accessToken: string | undefined;
+  if (
+    process.env.NODE_ENV === "development" ||
+    process.env.NEXT_PUBLIC_VERCEL_ENV === "production"
+  ) {
+    accessToken = request.headers.get("authorization")?.split(" ")[1];
+  }
 
   try {
     const supabase = createClient();
