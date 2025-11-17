@@ -88,14 +88,14 @@ export function useStreamingChat() {
                   const parsed = JSON.parse(jsonStr);
 
                   const content = parsed.choices?.[0]?.delta?.content || "";
-                  const sources = parsed.choices?.[0]?.delta?.sources || [];
+                  const sources: IWebSearchSource[] = parsed?.sources ?? [];
 
                   if (content) {
                     accumulatedContent += content;
                     onUpdate?.(accumulatedContent);
                   }
 
-                  if (sources) {
+                  if (sources.length > 0) {
                     webSearchSources = sources.map(
                       (source: IWebSearchSource) => ({
                         source: source.source,

@@ -2,7 +2,7 @@
 
 import type React from "react";
 import { useState } from "react";
-import { TbCheck, TbCopy } from "react-icons/tb";
+import { TbCheck, TbCopy, TbWorld } from "react-icons/tb";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { IChatMessage } from "../../types/chat";
@@ -79,53 +79,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
             </ReactMarkdown>
           </div>
 
-          {message.sources && message.sources.length > 0 && (
-            <HoverCard openDelay={300}>
-              <HoverCardTrigger>
-                <span className="cursor-pointer text-neutral-500 text-sm hover:underline">
-                  Sources
-                </span>
-              </HoverCardTrigger>
-              <HoverCardContent align="start">
-                <div className="flex mt-2 space-x-2 flex-col">
-                  <span className="text-neutral-500 text-sm">
-                    Sources used to generate this response:
-                  </span>
-
-                  <ol className="list-decimal list-inside">
-                    {message.sources.map(({ source }) => {
-                      if (!source.startsWith("http")) {
-                        return null;
-                      }
-
-                      const sourceUrl = new URL(source);
-                      const sourceDomain = sourceUrl.hostname;
-                      return (
-                        <li key={source}>
-                          <a
-                            href={source}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <span className="text-neutral-500 text-sm hover:underline">
-                              {sourceDomain}
-                            </span>
-                          </a>
-                        </li>
-                      );
-                    })}
-                  </ol>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
-          )}
-
           {!isUser &&
             (isStreaming ? (
               <span className="inline-block w-2 h-4 bg-gray-400 animate-pulse align-text-bottom" />
             ) : (
               message.content && (
-                <div className="flex mt-2 space-x-2">
+                <div className="flex mt-2 space-x-2 gap-1 items-center">
                   <button
                     onClick={() => copyToClipboard(message.content as string)}
                     className="text-neutral-500 hover:text-neutral-700"
@@ -133,6 +92,48 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                   >
                     {isCopied ? <TbCheck size={16} /> : <TbCopy size={16} />}
                   </button>
+
+                  {message.sources && message.sources.length > 0 && (
+                    <HoverCard openDelay={300}>
+                      <HoverCardTrigger className="flex items-center gap-1 group">
+                        <TbWorld size={16} className="text-neutral-500" />
+                        <span className="cursor-pointer text-neutral-500 text-sm group-hover:underline">
+                          Sources
+                        </span>
+                      </HoverCardTrigger>
+                      <HoverCardContent align="start">
+                        <div className="flex mt-2 space-x-2 flex-col">
+                          <span className="text-neutral-500 text-sm">
+                            Sources used to generate this response:
+                          </span>
+
+                          <ol className="list-decimal list-inside">
+                            {message.sources.map(({ source }) => {
+                              if (!source.startsWith("http")) {
+                                return null;
+                              }
+
+                              const sourceUrl = new URL(source);
+                              const sourceDomain = sourceUrl.hostname;
+                              return (
+                                <li key={source}>
+                                  <a
+                                    href={source}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <span className="text-neutral-500 text-sm hover:underline">
+                                      {sourceDomain}
+                                    </span>
+                                  </a>
+                                </li>
+                              );
+                            })}
+                          </ol>
+                        </div>
+                      </HoverCardContent>
+                    </HoverCard>
+                  )}
                 </div>
               )
             ))}
