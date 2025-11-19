@@ -1,5 +1,6 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SecretKeyModal } from "@/components/auth/SecretKeyModal";
 import StreamingChatArea from "@/components/chat/StreamingChatArea";
@@ -7,13 +8,8 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/contexts/UnifiedAuthProvider";
 import { useEncryption } from "@/hooks/useEncryption";
 
-interface ChatPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function ChatPage({ params }: ChatPageProps) {
+export default function ChatPage() {
+  const { id: chatId } = useParams<{ id: string }>();
   const { selectedPersona, userSecretKeySeed, setUserSecretKeySeed } = useApp();
 
   // biome-ignore lint/suspicious/noExplicitAny: TODO: add type
@@ -93,14 +89,14 @@ export default function ChatPage({ params }: ChatPageProps) {
       }
     };
     if (user && passphraseLoaded) {
-      fetchChatMessages(params.id);
+      fetchChatMessages(chatId);
     } else if (!user) {
       setLoading(false);
       setMessages([]);
       return;
     }
   }, [
-    params.id,
+    chatId,
     user,
     userSecretKeySeed,
     decryptWithStatus,
@@ -173,10 +169,8 @@ export default function ChatPage({ params }: ChatPageProps) {
             )}
             <div className="flex-1 min-h-0">
               <StreamingChatArea
-                key={params.id}
                 model={selectedPersona}
                 initialMessages={messages}
-                chatId={params.id}
                 hasDecryptionFailures={hasDecryptionFailures}
               />
             </div>
