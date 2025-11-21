@@ -1,11 +1,21 @@
 "use client";
 
-import { ThemeProvider as NextThemesProvider } from "next-themes";
 import type { ThemeProviderProps } from "next-themes";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { useEffect } from "react";
 
+interface CustomStorage {
+  getItem: (key: string) => string | null;
+  setItem: (key: string, value: string) => void;
+}
+
+// Extend props to include storage (supported but not in official types)
+interface ExtendedThemeProviderProps extends ThemeProviderProps {
+  storage?: CustomStorage;
+}
+
 // Custom storage that uses sessionStorage instead of localStorage
-const customStorage = {
+const customStorage: CustomStorage = {
   getItem: (key: string) => {
     if (typeof window === "undefined") return null;
     return sessionStorage.getItem(key);
@@ -32,17 +42,16 @@ export default function ThemeProvider({
     }
   }, []);
 
-  return (
-    <NextThemesProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-      storageKey="theme"
-      storage={customStorage}
-      {...props}
-    >
-      {children}
-    </NextThemesProvider>
-  );
+  const extendedProps: ExtendedThemeProviderProps = {
+    attribute: "class",
+    defaultTheme: "system",
+    enableSystem: true,
+    disableTransitionOnChange: true,
+    storageKey: "theme",
+    storage: customStorage,
+    children,
+    ...props,
+  };
+
+  return <NextThemesProvider {...(extendedProps as ThemeProviderProps)} />;
 }
