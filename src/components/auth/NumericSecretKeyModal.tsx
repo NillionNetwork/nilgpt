@@ -2,7 +2,6 @@
 
 import { Delete } from "lucide-react";
 import Image from "next/image";
-import type React from "react";
 import { useEffect, useState } from "react";
 import { useApp } from "@/contexts/AppContext";
 
