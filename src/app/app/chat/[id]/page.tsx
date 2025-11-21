@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { SecretKeyModal } from "@/components/auth/SecretKeyModal";
+import { PassphraseModal } from "@/components/auth/PassphraseModal";
 import StreamingChatArea from "@/components/chat/StreamingChatArea";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/contexts/UnifiedAuthProvider";
@@ -109,8 +109,8 @@ export default function ChatPage() {
     return (
       <div className="flex items-center justify-center h-full p-6">
         <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
-          <p className="text-gray-600 text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-white mb-4"></div>
+          <p className="text-gray-600 dark:text-white text-center">
             {!passphraseLoaded ? "Loading..." : "Loading messages..."}
           </p>
         </div>
@@ -123,8 +123,10 @@ export default function ChatPage() {
     return (
       <div className="flex items-center justify-center h-full p-6">
         <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
-          <p className="text-gray-600 text-center">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-white mb-4"></div>
+          <p className="text-gray-600 dark:text-white text-center">
+            Loading...
+          </p>
         </div>
       </div>
     );
@@ -178,8 +180,8 @@ export default function ChatPage() {
         ) : (
           <div className="flex items-center justify-center h-full p-6">
             <div className="flex flex-col items-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mb-4"></div>
-              <p className="text-gray-600 text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-white mb-4"></div>
+              <p className="text-gray-600 dark:text-white text-center">
                 Please enter your passphrase to continue...
               </p>
             </div>
@@ -187,7 +189,7 @@ export default function ChatPage() {
         )}
       </div>
 
-      <SecretKeyModal
+      <PassphraseModal
         isOpen={
           (!!user && user.isAuthenticated && !userSecretKeySeed) ||
           showSecretKeyModal

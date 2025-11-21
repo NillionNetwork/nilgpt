@@ -12,15 +12,23 @@ const SidebarIcon: React.FC<SidebarIconProps> = ({ isCollapsed, onClick }) => {
   return (
     <button
       onClick={onClick}
-      className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
+      className="p-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg transition-colors"
       aria-label={isCollapsed ? "Open sidebar" : "Close sidebar"}
       type="button"
     >
       <Image
         src="/img/black_sidebar.svg"
-        alt="nilGPT Logo"
+        alt="Toggle sidebar"
         width={24}
         height={24}
+        className="dark:hidden"
+      />
+      <Image
+        src="/img/white_sidebar.svg"
+        alt="Toggle sidebar"
+        width={24}
+        height={24}
+        className="hidden dark:block"
       />
     </button>
   );

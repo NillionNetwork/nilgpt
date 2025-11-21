@@ -65,46 +65,46 @@ export default function AuthModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-8 max-w-md w-full mx-4">
-        <h2 className="text-2xl font-bold mb-6">
+      <div className="bg-white dark:bg-[#2A2A2A] rounded-lg p-8 max-w-md w-full mx-4">
+        <h2 className="text-2xl font-bold mb-6 dark:text-white">
           {mode === "signin" ? "Sign In" : "Sign Up"}
         </h2>
         <form onSubmit={handleSubmit}>
           {mode === "signup" && (
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                 Username
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-transparent rounded-md dark:bg-[#4A4A4A] dark:text-white"
                 required
               />
             </div>
           )}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               Email
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-transparent rounded-md dark:bg-[#4A4A4A] dark:text-white"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
               Password
             </label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-transparent rounded-md dark:bg-[#4A4A4A] dark:text-white"
               required
             />
           </div>
@@ -116,7 +116,7 @@ export default function AuthModal({
                 checked={keepMePosted}
                 onChange={(e) => setKeepMePosted(e.target.checked)}
               />
-              <span className="items-start text-[10px] text-gray-600">
+              <span className="items-start text-[10px] text-gray-600 dark:text-gray-300">
                 Keep me posted on what&apos;s new via marketing emails
               </span>
             </label>
@@ -124,38 +124,42 @@ export default function AuthModal({
           <WalletButton onClose={onClose} />
           {mode === "signup" && (
             <div className="mb-6">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-300">
                 By agreeing to sign up you are agreeing to the{" "}
                 <a
                   href="https://nillion.notion.site/nilGPT-Terms-of-Service-2261827799b4805bb956e7dbb828310c"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 underline hover:text-blue-800"
+                  className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
                 >
                   terms and services
                 </a>{" "}
                 and{" "}
                 <Link
                   href="/privacy-policy"
-                  className="text-blue-600 underline hover:text-blue-800"
+                  className="text-blue-600 dark:text-blue-400 underline hover:text-blue-800 dark:hover:text-blue-300"
                 >
                   privacy policy
                 </Link>
               </p>
             </div>
           )}
-          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          {error && (
+            <p className="text-red-500 dark:text-red-400 text-sm mb-4">
+              {error}
+            </p>
+          )}
           <div className="flex justify-end gap-4">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-black rounded-md hover:bg-gray-800"
+              className="px-4 py-2 text-sm font-medium text-white dark:text-black bg-black dark:bg-white rounded-md hover:bg-gray-800 dark:hover:bg-gray-100"
               data-umami-event={
                 mode === "signin" ? "Sign In Clicked" : "Sign Up Clicked"
               }

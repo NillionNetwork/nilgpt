@@ -193,7 +193,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
   return (
     <div className="w-full">
       <form onSubmit={handleSubmit} className="relative flex flex-col">
-        <div className="relative bg-white border border-neutral-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 p-4 pb-2">
+        <div className="relative bg-white dark:bg-[#202020] border border-neutral-200 dark:border-white/[0.07] rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 p-4 pb-2">
           {imageContent.length > 0 && (
             <div className="mb-2 relative flex self-end w-fit">
               <Image
@@ -206,21 +206,21 @@ const ChatInput: React.FC<IChatInputProps> = ({
               <button
                 type="button"
                 onClick={clearPickedImage}
-                className="outline-none p-0.5 cursor-pointer rounded-full bg-neutral-200 absolute -top-1 -right-1 items-center"
+                className="outline-none p-0.5 cursor-pointer rounded-full bg-neutral-200 dark:bg-neutral-700 absolute -top-1 -right-1 items-center"
               >
-                <TbX size={12} />
+                <TbX size={12} className="dark:text-white" />
               </button>
             </div>
           )}
           {pdfContent.length > 0 && extractedPdfTextContent && (
             <div className="mb-2 relative flex self-end w-fit">
-              <TbFileTypePdf size={24} />
+              <TbFileTypePdf size={24} className="dark:text-white" />
               <button
                 type="button"
                 onClick={clearPickedPdf}
-                className="outline-none p-0.5 cursor-pointer rounded-full bg-neutral-200 absolute -top-2 -right-2.5 items-center"
+                className="outline-none p-0.5 cursor-pointer rounded-full bg-neutral-200 dark:bg-neutral-700 absolute -top-2 -right-2.5 items-center"
               >
-                <TbX size={12} />
+                <TbX size={12} className="dark:text-white" />
               </button>
             </div>
           )}
@@ -235,7 +235,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
               placeholder={
                 isAuthenticated ? placeholder : "Please sign in to chat."
               }
-              className="w-full bg-transparent text-neutral-800 placeholder-neutral-400 resize-none focus:outline-none text-base leading-6 min-h-[36px] max-h-32 overflow-y-auto"
+              className="w-full bg-transparent text-neutral-800 dark:text-white placeholder-neutral-400 dark:placeholder-neutral-500 resize-none focus:outline-none text-base leading-6 min-h-[36px] max-h-32 overflow-y-auto"
               style={{
                 scrollbarWidth: "none",
                 height: "auto",
@@ -266,7 +266,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
                 disabled={areFilePickersLoading || pdfContent?.length > 0}
                 className="outline-none p-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <TbPhoto size={18} />
+                <TbPhoto size={18} className="dark:text-white" />
               </button>
               <button
                 type="button"
@@ -274,7 +274,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
                 disabled={areFilePickersLoading || imageContent?.length > 0}
                 className="outline-none p-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <TbFileTypePdf size={18} />
+                <TbFileTypePdf size={18} className="dark:text-white" />
               </button>
             </div>
 
@@ -295,11 +295,11 @@ const ChatInput: React.FC<IChatInputProps> = ({
                     <label htmlFor="web-search-switch">
                       <TbWorldSearch
                         size={18}
-                        className={
+                        className={`dark:text-white ${
                           isWebSearchDisabled
                             ? "cursor-not-allowed opacity-50"
                             : "cursor-pointer"
-                        }
+                        }`}
                       />
                     </label>
                     <Switch
@@ -310,7 +310,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
                     />
                   </div>
                 </TooltipTrigger>
-                <TooltipContent className="text-neutral-500">
+                <TooltipContent className="text-neutral-500 dark:text-neutral-300">
                   Web search
                 </TooltipContent>
               </Tooltip>
@@ -326,8 +326,8 @@ const ChatInput: React.FC<IChatInputProps> = ({
                 }
                 className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors duration-200 ${
                   input.trim() && !isOverLimit && isAuthenticated
-                    ? "bg-neutral-800 text-yellow-400 hover:bg-neutral-700"
-                    : "bg-neutral-300 text-neutral-500"
+                    ? "bg-neutral-800 dark:bg-neutral-700 text-yellow-400 hover:bg-neutral-700 dark:hover:bg-neutral-600"
+                    : "bg-neutral-300 dark:bg-neutral-600 text-neutral-500 dark:text-neutral-400"
                 }`}
               >
                 <svg
@@ -351,7 +351,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
         </div>
         {isOverLimit && (
           <div className="mt-2 px-1">
-            <p className="text-sm text-red-500">
+            <p className="text-sm text-red-500 dark:text-red-400">
               Reached 600 word limit. Please shorten your message to send.
             </p>
           </div>
