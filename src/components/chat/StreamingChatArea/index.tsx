@@ -503,7 +503,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F7F6F2]">
+    <div className="flex flex-col h-full bg-background">
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center px-4">
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
@@ -526,10 +526,10 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
                       onClick={() =>
                         handleSendMessage({ content: suggestion.text })
                       }
-                      className="flex items-center space-x-2 p-3 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 text-left group w-fit"
+                      className="flex items-center space-x-2 p-3 bg-white dark:bg-[#202020] border border-gray-200 dark:border-white/[0.07] rounded-xl hover:bg-gray-50 dark:hover:bg-[#2a2a2a] hover:border-gray-300 dark:hover:border-white/[0.12] transition-all duration-200 text-left group w-fit"
                     >
                       <div className="text-lg">{suggestion.emoji}</div>
-                      <span className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
+                      <span className="text-sm font-medium text-gray-500 dark:text-white group-hover:text-gray-700 dark:group-hover:text-white">
                         {suggestion.text}
                       </span>
                     </button>

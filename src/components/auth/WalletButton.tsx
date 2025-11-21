@@ -48,10 +48,12 @@ function WalletButton({ onClose }: WalletButtonProps) {
       {/* Divider */}
       <div className="relative my-6">
         <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-t border-gray-300"></div>
+          <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
         </div>
         <div className="relative flex justify-center text-sm">
-          <span className="px-4 bg-white text-gray-500 font-medium">OR</span>
+          <span className="px-4 bg-white dark:bg-[#2A2A2A] text-gray-500 dark:text-gray-400 font-medium">
+            OR
+          </span>
         </div>
       </div>
 
@@ -61,20 +63,20 @@ function WalletButton({ onClose }: WalletButtonProps) {
         onClick={handleWalletLogin}
         className={`
           flex items-center justify-between w-full px-4 py-3 mb-4
-          border border-gray-300 rounded-lg 
-          bg-white hover:bg-gray-50 
-          text-gray-700 font-medium text-sm
+          border border-gray-300 dark:border-gray-600 rounded-lg
+          bg-white dark:bg-[#383838] hover:bg-gray-50 dark:hover:bg-[#424242]
+          text-gray-700 dark:text-gray-200 font-medium text-sm
           transition-colors duration-200
-          disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white
+          disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-[#383838]
           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
           ${isLoading ? "cursor-wait" : ""}
         `}
       >
         <div className="flex items-center space-x-3">
-          <div className="w-5 h-5 rounded border border-gray-300 flex items-center justify-center bg-gray-50">
+          <div className="w-5 h-5 rounded border border-gray-300 dark:border-gray-600 flex items-center justify-center bg-gray-50 dark:bg-[#2A2A2A]">
             {isLoading ? (
               <svg
-                className="animate-spin h-3 w-3 text-gray-600"
+                className="animate-spin h-3 w-3 text-gray-600 dark:text-gray-300"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -103,7 +105,7 @@ function WalletButton({ onClose }: WalletButtonProps) {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="text-gray-600"
+                className="text-gray-600 dark:text-gray-300"
               >
                 <rect x="3" y="5" width="18" height="14" rx="2" />
                 <polyline points="3,10 12,10 21,10" />
@@ -121,7 +123,7 @@ function WalletButton({ onClose }: WalletButtonProps) {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="text-gray-400"
+          className="text-gray-400 dark:text-gray-500"
         >
           <polyline points="9,18 15,12 9,6" />
         </svg>
