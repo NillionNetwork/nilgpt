@@ -83,10 +83,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
     }
   };
 
-  const updateChatTitle = async (
-    chatIdToUpdate?: string,
-    conversationMessages?: IChatMessage[],
-  ) => {
+  const updateChatTitle = async (conversationMessages?: IChatMessage[]) => {
     // 1. Call LLM Chat API for summary
     let title = null;
 
@@ -145,7 +142,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
         method: "POST",
         headers,
         body: JSON.stringify({
-          _id: chatIdToUpdate || chatId,
+          _id: chatId,
           title: encryptedTitle,
           message_count: 2,
         }),
@@ -406,7 +403,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
                     sources,
                   },
                 ];
-                await updateChatTitle(chatId, currentConversation);
+                await updateChatTitle(currentConversation);
                 LocalStorageService.removeUntitledChats();
 
                 if (typeof window !== "undefined") {
