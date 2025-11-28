@@ -14,6 +14,15 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { _id, title, message_count, noTitle } = body;
 
+    if (!_id) {
+      return NextResponse.json(
+        {
+          error: "Missing _id",
+        },
+        { status: 400 },
+      );
+    }
+
     const updateData: Partial<CHAT_SCHEMA> = {
       creator: auth.userId as string,
       updated_at: new Date().toISOString(),

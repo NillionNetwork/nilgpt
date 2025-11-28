@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { TbRefresh } from "react-icons/tb";
 import { DEFAULT_MODEL } from "@/config/llm";
@@ -21,13 +22,11 @@ import type { StreamingChatAreaProps } from "./types";
 
 const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
   initialMessages = [],
-  chatId: initialChatId = null,
   hasDecryptionFailures = false,
 }) => {
+  const { id: chatId } = useParams<{ id: string }>();
   const [messages, setMessages] = useState<IChatMessage[]>(initialMessages);
-  const [chatId, setChatId] = useState<string | null>(initialChatId);
   const [isUpdatingChat, setIsUpdatingChat] = useState(false);
-  const chatIdRef = useRef<string | null>(initialChatId);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { sendMessage, isLoading, isStreaming, isSearchingWeb } =
     useStreamingChat();
@@ -76,6 +75,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
         method: "POST",
         headers,
         body: JSON.stringify({
+          _id: chatId,
           title: "null",
           message_count: 2,
           persona: selectedPersona,
@@ -93,10 +93,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
     }
   };
 
-  const updateChatTitle = async (
-    chatIdToUpdate?: string,
-    conversationMessages?: IChatMessage[],
-  ) => {
+  const updateChatTitle = async (conversationMessages?: IChatMessage[]) => {
     // 1. Call LLM Chat API for summary
     let title = null;
 
@@ -155,7 +152,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
         method: "POST",
         headers,
         body: JSON.stringify({
-          _id: chatIdToUpdate || chatId,
+          _id: chatId,
           title: encryptedTitle,
           message_count: 2,
         }),
@@ -285,14 +282,6 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
     }
   }, [initialMessages, messages.length]);
 
-  // Handle chat ID changes (when switching between chats)
-  useEffect(() => {
-    if (initialChatId && initialChatId !== chatId) {
-      setChatId(initialChatId);
-      chatIdRef.current = initialChatId;
-    }
-  }, [initialChatId, chatId]);
-
   useEffect(() => {
     if (messages.length > 0 && messages.length !== initialMessages.length) {
       scrollToBottom();
@@ -388,20 +377,17 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
             const totalMessages = messages.length + 2;
 
             if (totalMessages === 2) {
-              const newChatId = await createInitialChat();
-              setChatId(newChatId.message);
-              chatIdRef.current = newChatId.message;
-
+              await createInitialChat();
               // Add the two messages to the chat
               await createMessage({
-                chatId: newChatId.message,
+                chatId,
                 role: "user",
                 content: userMessageContentText,
                 order: 1,
                 attachments: userMessageAttachments,
               });
               await createMessage({
-                chatId: newChatId.message,
+                chatId,
                 role: "assistant",
                 content: finalContent,
                 order: 2,
@@ -427,7 +413,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
                     sources,
                   },
                 ];
-                await updateChatTitle(newChatId.message, currentConversation);
+                await updateChatTitle(currentConversation);
                 LocalStorageService.removeUntitledChats();
 
                 if (typeof window !== "undefined") {
@@ -443,37 +429,34 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
             }
 
             if (totalMessages >= 3) {
-              const currentChatId = chatIdRef.current || chatId;
-              if (currentChatId) {
-                await Promise.all([
-                  // ODD (User)
-                  (totalMessages - 1) % 2 === 1
-                    ? createMessage({
-                        chatId: currentChatId,
-                        role: "user",
-                        content: userMessageContentText,
-                        order: totalMessages - 1,
-                        attachments: userMessageAttachments,
-                      })
-                    : Promise.resolve(),
+              await Promise.all([
+                // ODD (User)
+                (totalMessages - 1) % 2 === 1
+                  ? createMessage({
+                      chatId,
+                      role: "user",
+                      content: userMessageContentText,
+                      order: totalMessages - 1,
+                      attachments: userMessageAttachments,
+                    })
+                  : Promise.resolve(),
 
-                  // EVEN (Assistant)
-                  totalMessages % 2 === 0
-                    ? createMessage({
-                        chatId: currentChatId,
-                        role: "assistant",
-                        content: finalContent,
-                        order: totalMessages,
-                        sources,
-                        web_search: webSearchUsed,
-                      })
-                    : Promise.resolve(),
-                ]);
+                // EVEN (Assistant)
+                totalMessages % 2 === 0
+                  ? createMessage({
+                      chatId,
+                      role: "assistant",
+                      content: finalContent,
+                      order: totalMessages,
+                      sources,
+                      web_search: webSearchUsed,
+                    })
+                  : Promise.resolve(),
+              ]);
 
-                updateChatCount(totalMessages).catch((error) => {
-                  console.warn("Count update failed:", error);
-                });
-              }
+              updateChatCount(totalMessages).catch((error) => {
+                console.warn("Count update failed:", error);
+              });
             }
           },
           onError: (error) => {
