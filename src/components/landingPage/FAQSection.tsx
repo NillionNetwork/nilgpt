@@ -27,7 +27,7 @@ const FAQSection = () => {
             href="https://x.com/davtbutler/status/1950546294574825755"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 underline"
+            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline"
           >
             here
           </a>
@@ -59,10 +59,10 @@ const FAQSection = () => {
   ];
 
   return (
-    <section id="faq" className="py-20 bg-white px-4">
+    <section id="faq" className="py-20 bg-transparent px-4">
       <div className="max-w-4xl mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
-          <h2 className="font-display text-5xl lg:text-6xl font-normal text-black mb-6">
+          <h2 className="font-display text-5xl lg:text-6xl font-normal text-black dark:text-white mb-6">
             Frequently Asked Questions
           </h2>
         </div>
@@ -71,13 +71,13 @@ const FAQSection = () => {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="border-b border-gray-200 last:border-b-0"
+              className="border-b border-gray-200 dark:border-white/20 last:border-b-0"
             >
               <button
                 className="w-full py-6 text-left hover:opacity-70 transition-opacity flex justify-between items-center"
                 onClick={() => setOpenFAQ(openFAQ === index ? null : index)}
               >
-                <h3 className="font-display text-2xl font-normal text-black pr-8">
+                <h3 className="font-display text-2xl font-normal text-black dark:text-white pr-8">
                   {faq.question}
                 </h3>
                 <div
@@ -85,11 +85,13 @@ const FAQSection = () => {
                     openFAQ === index ? "rotate-45" : ""
                   }`}
                 >
-                  <span className="text-gray-600 text-3xl font-light">+</span>
+                  <span className="text-gray-600 dark:text-[#BBBBBB] text-3xl font-light">
+                    +
+                  </span>
                 </div>
               </button>
               {openFAQ === index && (
-                <div className="pb-6 text-gray-600 text-lg leading-relaxed">
+                <div className="pb-6 text-gray-600 dark:text-[#BBBBBB] text-lg leading-relaxed">
                   {faq.answer}
                 </div>
               )}

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { TbRefresh } from "react-icons/tb";
 import { DEFAULT_MODEL } from "@/config/llm";
 import { getPersonaById } from "@/config/personas";
@@ -34,6 +36,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
   const { setHasMessages, selectedPersona } = useApp();
   const { encrypt, hasSecretKey } = useEncryption();
   const { isPWA } = useIsPWA();
+  const pathname = usePathname();
 
   /*
    CHAT
@@ -507,6 +510,15 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center px-4">
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
+            {pathname === "/app" && (
+              <Image
+                src="/img/test_mermaid2.png"
+                alt="Nilia Hero Image"
+                width={250}
+                height={175}
+                className="hidden dark:block"
+              />
+            )}
             <div className="w-full max-w-2xl">
               {!hasDecryptionFailures && (
                 <ChatInput

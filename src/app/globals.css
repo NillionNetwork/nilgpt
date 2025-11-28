@@ -110,4 +110,7 @@ a {
     @apply text-foreground;
     @apply bg-[--background];
   }
+  .dark body {
+    @apply bg-transparent;
+  }
 }

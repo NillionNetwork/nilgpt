@@ -9,13 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import usePWAInstallInstructionsModal from "@/hooks/usePWAInstallInstructionsModal";
 import { captureAndStoreUTMParameters } from "@/utils/utmTracking";
-import FAQSection from "../components/landingPage/FAQSection";
-import FeaturesSection from "../components/landingPage/FeaturesSection";
-import Header from "../components/landingPage/Header";
-import HeroSection from "../components/landingPage/HeroSection";
-import TestimonialSection from "../components/landingPage/TestimonialSection";
+import FAQSection from "@/components/landingPage/FAQSection";
+import FeaturesSection from "@/components/landingPage/FeaturesSection";
+import Header from "@/components/landingPage/Header";
+import HeroSection from "@/components/landingPage/HeroSection";
+import TestimonialSection from "@/components/landingPage/TestimonialSection";
+import NiliaHeroSection from "@/components/landingPage/NiliaHeroSection";
 
-export default function Home() {
+export default function Nilia() {
   const { setTheme } = useTheme();
   const {
     shouldShowPWAInstallInstructionsModal,
@@ -23,9 +24,9 @@ export default function Home() {
     setIsPWAInstallInstructionsModalOpen,
   } = usePWAInstallInstructionsModal();
 
-  // Force light theme on this landing page
+  // Force dark theme on this landing page
   useEffect(() => {
-    setTheme("light");
+    setTheme("dark");
   }, [setTheme]);
 
   // Capture and store UTM parameters on landing page load
@@ -38,12 +39,23 @@ export default function Home() {
 
   return (
     <main className="relative">
-      <Header />
-      <HeroSection />
+      <Header targetTheme="dark" />
+      <NiliaHeroSection />
       <TestimonialSection />
-      <FeaturesSection />
-      <FAQSection />
-      <Footer />
+      <FeaturesSection targetTheme="dark" />
+      <section
+        style={{
+          backgroundImage:
+            "linear-gradient(to bottom, #1b1b1b 0%, #1b1b1b 40%, transparent 60%), url('/img/footer_gradient.webp')",
+          backgroundSize: "100% 100%, 100% 100%",
+          backgroundPosition: "top, bottom center",
+          backgroundRepeat: "no-repeat, no-repeat",
+        }}
+      >
+        <FAQSection />
+        <Footer />
+      </section>
+
       {shouldShowPWAInstallInstructionsModal && (
         <Dialog
           open={isPWAInstallInstructionsModalOpen}
