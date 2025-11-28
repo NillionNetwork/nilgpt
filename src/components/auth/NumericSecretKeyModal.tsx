@@ -110,7 +110,7 @@ export function NumericSecretKeyModal({
               key={index}
               className={`w-4 h-4 rounded-full border-2 transition-colors ${
                 index < pin.length
-                  ? "bg-[#FFC971] border-[#FFC971]"
+                  ? "bg-[#FFFFFF] border-[#FFFFFF]"
                   : "bg-transparent border-[#555]"
               }`}
             />
@@ -163,7 +163,7 @@ export function NumericSecretKeyModal({
           disabled={pin.length !== PIN_LENGTH}
           className={`w-full py-3 px-6 rounded-full font-medium transition-colors ${
             pin.length === PIN_LENGTH
-              ? "bg-[#FFC971] text-black hover:bg-[#FFD584]"
+              ? "bg-[#FFFFFF] text-black hover:bg-[#FFFFFF]"
               : "bg-[#333] text-[#666] cursor-not-allowed"
           }`}
         >
