@@ -3,12 +3,12 @@
 import { Download } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
-import FAQSection from "@/components/landingPage/FAQSection";
-import FeaturesSection from "@/components/landingPage/FeaturesSection";
+import NiliaFAQSection from "@/components/landingPage/NiliaFAQSection";
+import NiliaFeaturesSection from "@/components/landingPage/NiliaFeaturesSection";
 import Footer from "@/components/landingPage/Footer";
 import Header from "@/components/landingPage/Header";
 import NiliaHeroSection from "@/components/landingPage/NiliaHeroSection";
-import TestimonialSection from "@/components/landingPage/TestimonialSection";
+import NiliaTestimonialSection from "@/components/landingPage/NiliaTestimonialSection";
 import PWAInstallInstructionsModal from "@/components/PWAInstallInstructionsModal";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
@@ -40,8 +40,8 @@ export default function Nilia() {
     <main className="relative">
       <Header />
       <NiliaHeroSection />
-      <TestimonialSection />
-      <FeaturesSection />
+      <NiliaTestimonialSection />
+      <NiliaFeaturesSection />
       <section
         style={{
           backgroundImage:
@@ -51,7 +51,7 @@ export default function Nilia() {
           backgroundRepeat: "no-repeat, no-repeat",
         }}
       >
-        <FAQSection />
+        <NiliaFAQSection />
         <Footer />
       </section>
 
