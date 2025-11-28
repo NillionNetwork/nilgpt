@@ -86,11 +86,11 @@ export function SecretKeyModal({ isOpen, onClose }: SecretKeyModalProps) {
           />
         </div>
         <p className="text-gray-700 mb-6 leading-relaxed text-center">
-          Enter a passphrase - any word or phrase - to encrypt your chats.
+          Enter a passphrase - any word or phrase - to protect your chats.
           Alternatively, generate a readable passphrase.
           <br />
           <br /> No one else knows this, so <strong>keep it safe</strong> so you
-          can decrypt your chats in the future.
+          can view your chats in the future.
         </p>
 
         <form onSubmit={handleSubmit}>

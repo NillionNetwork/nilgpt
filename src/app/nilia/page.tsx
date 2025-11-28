@@ -38,10 +38,10 @@ export default function Nilia() {
 
   return (
     <main className="relative">
-      <Header targetTheme="dark" />
+      <Header />
       <NiliaHeroSection />
       <TestimonialSection />
-      <FeaturesSection targetTheme="dark" />
+      <FeaturesSection />
       <section
         style={{
           backgroundImage:

@@ -85,13 +85,13 @@ const FAQSection = () => {
                     openFAQ === index ? "rotate-45" : ""
                   }`}
                 >
-                  <span className="text-gray-600 dark:text-[#BBBBBB] text-3xl font-light">
+                  <span className="text-gray-600 dark:text-white dark:text-opacity-70	 text-3xl font-light">
                     +
                   </span>
                 </div>
               </button>
               {openFAQ === index && (
-                <div className="pb-6 text-gray-600 dark:text-[#BBBBBB] text-lg leading-relaxed">
+                <div className="pb-6 text-gray-600 dark:text-white dark:text-opacity-70	 text-lg leading-relaxed">
                   {faq.answer}
                 </div>
               )}
