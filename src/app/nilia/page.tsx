@@ -1,6 +1,5 @@
 "use client";
 
-import { Download } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import NiliaFAQSection from "@/components/landingPage/NiliaFAQSection";
@@ -9,23 +8,15 @@ import Footer from "@/components/landingPage/Footer";
 import Header from "@/components/landingPage/Header";
 import NiliaHeroSection from "@/components/landingPage/NiliaHeroSection";
 import NiliaTestimonialSection from "@/components/landingPage/NiliaTestimonialSection";
-import PWAInstallInstructionsModal from "@/components/PWAInstallInstructionsModal";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import usePWAInstallInstructionsModal from "@/hooks/usePWAInstallInstructionsModal";
 import { captureAndStoreUTMParameters } from "@/utils/utmTracking";
 
 export default function Nilia() {
   const { setTheme } = useTheme();
-  const {
-    shouldShowPWAInstallInstructionsModal,
-    isPWAInstallInstructionsModalOpen,
-    setIsPWAInstallInstructionsModalOpen,
-  } = usePWAInstallInstructionsModal();
 
   // Force dark theme on this landing page
   useEffect(() => {
     setTheme("dark");
+    sessionStorage.setItem("nilia", "true");
   }, [setTheme]);
 
   // Capture and store UTM parameters on landing page load
@@ -38,7 +29,7 @@ export default function Nilia() {
 
   return (
     <main className="relative">
-      <Header />
+      <Header targetTheme="dark" />
       <NiliaHeroSection />
       <NiliaTestimonialSection />
       <NiliaFeaturesSection />
@@ -54,25 +45,6 @@ export default function Nilia() {
         <NiliaFAQSection />
         <Footer />
       </section>
-
-      {shouldShowPWAInstallInstructionsModal && (
-        <Dialog
-          open={isPWAInstallInstructionsModalOpen}
-          onOpenChange={setIsPWAInstallInstructionsModalOpen}
-        >
-          <DialogTrigger asChild>
-            <Button
-              variant="default"
-              size="sm"
-              className="bg-[#FFC971] rounded-full gap-2 px-4 my-4 hover:bg-[#FFC971]/90 fixed bottom-4 right-4"
-            >
-              <Download className="text-black" size={16} />
-              <span className="text-sm text-black">Install nilGPT</span>
-            </Button>
-          </DialogTrigger>
-          <PWAInstallInstructionsModal />
-        </Dialog>
-      )}
     </main>
   );
 }
