@@ -2,10 +2,10 @@
 
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
-import NiliaFAQSection from "@/components/landingPage/NiliaFAQSection";
-import NiliaFeaturesSection from "@/components/landingPage/NiliaFeaturesSection";
 import Footer from "@/components/landingPage/Footer";
 import Header from "@/components/landingPage/Header";
+import NiliaFAQSection from "@/components/landingPage/NiliaFAQSection";
+import NiliaFeaturesSection from "@/components/landingPage/NiliaFeaturesSection";
 import NiliaHeroSection from "@/components/landingPage/NiliaHeroSection";
 import NiliaTestimonialSection from "@/components/landingPage/NiliaTestimonialSection";
 import { captureAndStoreUTMParameters } from "@/utils/utmTracking";
