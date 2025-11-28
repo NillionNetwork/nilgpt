@@ -2,12 +2,12 @@
 
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
-import FAQSection from "@/components/landingPage/FAQSection";
-import FeaturesSection from "@/components/landingPage/FeaturesSection";
 import Footer from "@/components/landingPage/Footer";
 import Header from "@/components/landingPage/Header";
+import NiliaFAQSection from "@/components/landingPage/NiliaFAQSection";
+import NiliaFeaturesSection from "@/components/landingPage/NiliaFeaturesSection";
 import NiliaHeroSection from "@/components/landingPage/NiliaHeroSection";
-import TestimonialSection from "@/components/landingPage/TestimonialSection";
+import NiliaTestimonialSection from "@/components/landingPage/NiliaTestimonialSection";
 import { captureAndStoreUTMParameters } from "@/utils/utmTracking";
 
 export default function Nilia() {
@@ -31,8 +31,8 @@ export default function Nilia() {
     <main className="relative">
       <Header targetTheme="dark" />
       <NiliaHeroSection />
-      <TestimonialSection />
-      <FeaturesSection />
+      <NiliaTestimonialSection />
+      <NiliaFeaturesSection />
       <section
         style={{
           backgroundImage:
@@ -42,7 +42,7 @@ export default function Nilia() {
           backgroundRepeat: "no-repeat, no-repeat",
         }}
       >
-        <FAQSection />
+        <NiliaFAQSection />
         <Footer />
       </section>
     </main>
