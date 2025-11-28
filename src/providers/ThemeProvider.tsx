@@ -44,8 +44,8 @@ export default function ThemeProvider({
 
   const extendedProps: ExtendedThemeProviderProps = {
     attribute: "class",
-    defaultTheme: "system",
-    enableSystem: true,
+    // defaultTheme: "system",
+    // enableSystem: true,
     disableTransitionOnChange: true,
     storageKey: "theme",
     storage: customStorage,
