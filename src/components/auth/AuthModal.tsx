@@ -34,9 +34,12 @@ export default function AuthModal({
     setMounted(true);
   }, []);
 
-  // Dark theme = Nilia mode (username+password)
-  // Light theme = Regular mode (email+password)
-  const isFromNilia = mounted && resolvedTheme === "dark";
+  // Check for Nilia mode flag directly
+  // Nilia mode = username+password, Regular mode = email+password
+  const isFromNilia =
+    mounted &&
+    typeof window !== "undefined" &&
+    sessionStorage.getItem("nilia") === "true";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
