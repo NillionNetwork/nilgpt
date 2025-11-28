@@ -25,7 +25,7 @@ const Header = ({ targetTheme = "light" }: HeaderProps) => {
                 alt="nilGPT Logo"
                 width={24}
                 height={24}
-                className="hidden light:block"
+                className="block dark:hidden"
               />
               <Image
                 src="/img/reskin_logo.svg"
