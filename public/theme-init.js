@@ -1,13 +1,14 @@
 // Theme initialization script - runs before React hydration
-(function () {
+(() => {
+  var theme;
   try {
-    var theme = sessionStorage.getItem("theme");
+    theme = sessionStorage.getItem("theme");
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
     } else if (theme === "light") {
       document.documentElement.classList.remove("dark");
     }
-  } catch (e) {
+  } catch (_e) {
     // Silently fail if sessionStorage is not available
   }
 })();
