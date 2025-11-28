@@ -424,7 +424,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
                 className="hidden dark:block"
               />
               <Image
-                className="ml-2"
+                className="ml-2 dark:hidden"
                 src="/img/nilGPT_whiteText.svg"
                 alt="nilGPT Logo"
                 width={65}
