@@ -3,18 +3,17 @@
 import { Download } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
+import FAQSection from "@/components/landingPage/FAQSection";
+import FeaturesSection from "@/components/landingPage/FeaturesSection";
 import Footer from "@/components/landingPage/Footer";
+import Header from "@/components/landingPage/Header";
+import NiliaHeroSection from "@/components/landingPage/NiliaHeroSection";
+import TestimonialSection from "@/components/landingPage/TestimonialSection";
 import PWAInstallInstructionsModal from "@/components/PWAInstallInstructionsModal";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import usePWAInstallInstructionsModal from "@/hooks/usePWAInstallInstructionsModal";
 import { captureAndStoreUTMParameters } from "@/utils/utmTracking";
-import FAQSection from "@/components/landingPage/FAQSection";
-import FeaturesSection from "@/components/landingPage/FeaturesSection";
-import Header from "@/components/landingPage/Header";
-import HeroSection from "@/components/landingPage/HeroSection";
-import TestimonialSection from "@/components/landingPage/TestimonialSection";
-import NiliaHeroSection from "@/components/landingPage/NiliaHeroSection";
 
 export default function Nilia() {
   const { setTheme } = useTheme();

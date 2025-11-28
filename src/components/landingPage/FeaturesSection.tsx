@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { getThemeNavigationHandler } from "@/utils/themeNavigation";
 import SparkleButton from "@/components/ui/SparkleButton";
+import { getThemeNavigationHandler } from "@/utils/themeNavigation";
 
 interface FeaturesSectionProps {
   targetTheme?: "light" | "dark";
