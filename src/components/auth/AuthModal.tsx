@@ -1,23 +1,14 @@
 import Link from "next/link";
-import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/UnifiedAuthProvider";
 import WalletButton from "./WalletButton";
 
 type AuthMode = "signin" | "signup" | "forgot-password";
 
-// Generate email from username: username + hash(8digits)@nilgpt-user.xyz
+// Generate email from username: username@nilgpt-user.xyz
 function generateEmailFromUsername(username: string): string {
-  // Create a simple hash from the username
-  let hash = 0;
-  for (let i = 0; i < username.length; i++) {
-    const char = username.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash = hash & hash; // Convert to 32-bit integer
-  }
-  // Get 8 digits from the hash (ensure positive, pad if needed)
-  const hashDigits = Math.abs(hash).toString().padStart(8, "0").slice(-8);
-  return `${username}${hashDigits}@nilgpt-user.xyz`;
+  return `${username}@nilgpt-user.xyz`;
 }
 
 export default function AuthModal({
