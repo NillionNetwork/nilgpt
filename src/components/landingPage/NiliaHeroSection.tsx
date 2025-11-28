@@ -28,22 +28,19 @@ export default function NiliaHeroSection() {
       </div>
 
       {/* Headline */}
-      <h1 className="mb-6 text-center font-display text-5xl lg:text-6xl  font-medium tracking-tight text-white md:text-5xl lg:text-6xl">
-        Your Totally Secure
-        <br />
-        <em className="font-serif italic text-white/90">AI Companion</em>
+      <h1 className="mb-6 text-center font-display text-5xl lg:text-6xl font-medium tracking-tight text-white md:text-5xl lg:text-6xl">
+        Your Safe Space To Think
       </h1>
 
       {/* Subtext */}
       <p className="mb-8 max-w-md text-center text-base text-white/70 md:max-w-2xl md:text-lg">
-        All the functionality you need. All the privacy you deserve.
-        <br />
-        Zero compromises on security or performance.
+        A private place to think out loud, find clarity, and feel understood —
+        without being watched, tracked, or analyzed.
       </p>
 
       {/* CTA Button */}
       <SparkleButton
-        text="Let's Chat"
+        text="Go To Your Safe Space"
         href="/app"
         onClick={getThemeNavigationHandler("/app", "dark")}
         dataUmamiEvent="Let's Chat Clicked - Nilia"
