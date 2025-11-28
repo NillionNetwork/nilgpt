@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import { getThemeNavigationHandler } from "@/utils/themeNavigation";
 
 const HeroSection = () => {
   const [messageCount, setMessageCount] = useState<number | null>(null);
@@ -93,14 +93,15 @@ const HeroSection = () => {
             </div>
 
             <div className="flex justify-center md:justify-start md:mb-0">
-              <Link
+              <a
                 href="/app"
+                onClick={getThemeNavigationHandler("/app", "light")}
                 data-umami-event="Let's Chat Clicked"
-                className="inline-flex items-center gap-2 bg-black text-xl text-[#FFC971] px-8 py-4 rounded-full hover:bg-gray-800 transition-colors"
+                className="inline-flex items-center gap-2 bg-black text-xl text-[#FFC971] px-8 py-4 rounded-full hover:bg-gray-800 transition-colors cursor-pointer"
               >
                 <div className="w-2 h-2 bg-[#FFC971] rounded-full"></div>
                 Let&apos;s Chat
-              </Link>
+              </a>
             </div>
           </div>
           {/* Right Column - Image (hidden on mobile) */}

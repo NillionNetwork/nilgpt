@@ -1,6 +1,7 @@
 "use client";
 
 import { Download } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import Footer from "@/components/landingPage/Footer";
 import PWAInstallInstructionsModal from "@/components/PWAInstallInstructionsModal";
@@ -15,11 +16,17 @@ import HeroSection from "../components/landingPage/HeroSection";
 import TestimonialSection from "../components/landingPage/TestimonialSection";
 
 export default function Home() {
+  const { setTheme } = useTheme();
   const {
     shouldShowPWAInstallInstructionsModal,
     isPWAInstallInstructionsModalOpen,
     setIsPWAInstallInstructionsModalOpen,
   } = usePWAInstallInstructionsModal();
+
+  // Force light theme on this landing page
+  useEffect(() => {
+    setTheme("light");
+  }, [setTheme]);
 
   // Capture and store UTM parameters on landing page load
   useEffect(() => {

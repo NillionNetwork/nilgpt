@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { TbRefresh } from "react-icons/tb";
 import { DEFAULT_MODEL } from "@/config/llm";
@@ -34,6 +35,15 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
   const { setHasMessages, selectedPersona } = useApp();
   const { encrypt, hasSecretKey } = useEncryption();
   const { isPWA } = useIsPWA();
+
+  // Get display name for greeting
+  const getUserName = () => {
+    if (!user) return "";
+    if (user.authProvider === "supabase") {
+      return user.name || user.email?.split("@")[0] || "";
+    }
+    return user.name || "";
+  };
 
   /*
    CHAT
@@ -507,6 +517,31 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center px-4">
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
+            <div className="hidden dark:block relative mb-8">
+              <Image
+                src="/img/test_mermaid2.png"
+                alt="Nilia Hero Image"
+                width={250}
+                height={175}
+                className="mb-0"
+              />
+              {user && (
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 text-center w-full px-4 md:px-0 md:w-auto">
+                  <p
+                    className="text-white text-2xl md:text-4xl font-normal leading-tight"
+                    style={{ fontFamily: "'Inter Tight', sans-serif" }}
+                  >
+                    <span className="whitespace-nowrap block">
+                      Hey {getUserName()},
+                    </span>
+                    <span className="block md:whitespace-nowrap">
+                      I&apos;m here whenever you need me.
+                    </span>
+                  </p>
+                </div>
+              )}
+            </div>
+
             <div className="w-full max-w-2xl">
               {!hasDecryptionFailures && (
                 <ChatInput

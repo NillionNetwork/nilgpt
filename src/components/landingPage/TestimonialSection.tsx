@@ -49,8 +49,8 @@ const TestimonialSection = () => {
   const currentTestimonial = testimonials[currentSlide];
 
   return (
-    <section className="py-20 bg-white" id="testimonials">
-      <h2 className="font-display text-5xl lg:text-6xl font-normal text-black text-center mb-10">
+    <section className="py-20 bg-[#1b1b1b]" id="testimonials">
+      <h2 className="font-display text-5xl lg:text-6xl font-normal text-white text-center mb-10">
         nilGPT is for everyone.
       </h2>
       <div className="max-w-8xl mx-auto px-8 md:px-48">
@@ -58,7 +58,7 @@ const TestimonialSection = () => {
           <div className="grid lg:grid-cols-2 gap-12 items-start relative">
             <div className="space-y-8">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-transparent border-[2.5px] border-[#FFC971] dark:border-white rounded-full flex items-center justify-center">
                   <Image
                     src={currentTestimonial.img}
                     alt={`${currentTestimonial.name} profile picture`}
@@ -68,7 +68,7 @@ const TestimonialSection = () => {
                   />
                 </div>
                 <div className="font-medium text-white text-xl md:text-2xl">
-                  <span className="text-[#FFC971]">
+                  <span className="text-[#FFC971] dark:text-white">
                     {currentTestimonial.name}
                   </span>
                   {currentTestimonial.persona}
@@ -87,7 +87,7 @@ const TestimonialSection = () => {
               <div className="flex items-center gap-4">
                 <button
                   onClick={prevSlide}
-                  className="w-12 h-12 border border-gray-600 rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors"
+                  className="w-12 h-12 border-[2px] border-[#FFC971] dark:border-white rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors"
                 >
                   <svg
                     width="20"
@@ -102,7 +102,7 @@ const TestimonialSection = () => {
                 </button>
                 <button
                   onClick={nextSlide}
-                  className="w-12 h-12 border border-gray-600 rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors"
+                  className="w-12 h-12 border-[2px] border-[#FFC971] dark:border-white rounded-full flex items-center justify-center text-white hover:bg-gray-800 transition-colors"
                 >
                   <svg
                     width="20"

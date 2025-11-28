@@ -4,11 +4,13 @@ import Image from "next/image";
 import SparkleButton from "@/components/ui/SparkleButton";
 import { getThemeNavigationHandler } from "@/utils/themeNavigation";
 
-interface FeaturesSectionProps {
+interface NiliaFeaturesSectionProps {
   targetTheme?: "light" | "dark";
 }
 
-const FeaturesSection = ({ targetTheme = "light" }: FeaturesSectionProps) => (
+const NiliaFeaturesSection = ({
+  targetTheme = "dark",
+}: NiliaFeaturesSectionProps) => (
   <section id="features" className="py-20 bg-[#F7F6F2] dark:bg-[#1b1b1b]">
     <div className="max-w-7xl mx-auto px-4 md:px-10">
       <div className="text-center mb-10 md:mb-24">
@@ -17,7 +19,7 @@ const FeaturesSection = ({ targetTheme = "light" }: FeaturesSectionProps) => (
         </h2>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-10 mb-20 w-full">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10 mb-20 w-full">
         {[
           {
             icon: (
@@ -31,9 +33,9 @@ const FeaturesSection = ({ targetTheme = "light" }: FeaturesSectionProps) => (
                 />
               </div>
             ),
-            title: "Data private by default",
+            title: "Zero Data Retention",
             description:
-              "Chat data securely split and stored among multiple nilDB nodes",
+              "Your thoughts stay yours. Nothing is saved, stored, or shared.",
           },
           {
             icon: (
@@ -47,9 +49,25 @@ const FeaturesSection = ({ targetTheme = "light" }: FeaturesSectionProps) => (
                 />
               </div>
             ),
-            title: "Private AI",
+            title: "Private Inputs",
             description:
-              "All models run inside a secure enclave keeping your inputs private.",
+              "Say anything. It never becomes training data or part of any system.",
+          },
+          {
+            icon: (
+              <div className="w-16 h-16 bg-[#EDEAE0] dark:bg-transparent dark:border dark:border-white/20 rounded-full flex items-center justify-center">
+                <Image
+                  src="/img/shield.png"
+                  alt="Shield"
+                  width={24}
+                  height={24}
+                  className="dark:invert dark:brightness-0 dark:contrast-100"
+                />
+              </div>
+            ),
+            title: "Private Responses",
+            description:
+              "You receive your results in a protected, isolated environment — only accessible to you.",
           },
           {
             icon: (
@@ -63,9 +81,9 @@ const FeaturesSection = ({ targetTheme = "light" }: FeaturesSectionProps) => (
                 />
               </div>
             ),
-            title: "Multi Modes",
+            title: "Multi Models",
             description:
-              "Access specialised modes like wellness assistant, personal assistant & companion.",
+              "Choose the vibe you need: supportive, direct, deep-thinking, or creative.",
           },
         ].map((feature, index) => (
           <div key={index} className="text-center">
@@ -107,4 +125,4 @@ const FeaturesSection = ({ targetTheme = "light" }: FeaturesSectionProps) => (
   </section>
 );
 
-export default FeaturesSection;
+export default NiliaFeaturesSection;

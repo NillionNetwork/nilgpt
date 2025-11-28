@@ -1,9 +1,15 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/UnifiedAuthProvider";
 import WalletButton from "./WalletButton";
 
 type AuthMode = "signin" | "signup" | "forgot-password";
+
+// Generate email from username: username@nilgpt-user.xyz
+function generateEmailFromUsername(username: string): string {
+  return `${username}@nilgpt-user.xyz`;
+}
 
 export default function AuthModal({
   mode: initialMode,
@@ -19,20 +25,47 @@ export default function AuthModal({
   const [error, setError] = useState("");
   const [keepMePosted, setKeepMePosted] = useState(false);
   const [_showEmailConfirmation, _setShowEmailConfirmation] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme } = useTheme();
   const { signIn, signUp } = useAuth();
+
+  // Avoid hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Check for Nilia mode flag directly
+  // Nilia mode = username+password, Regular mode = email+password
+  const isFromNilia =
+    mounted &&
+    typeof window !== "undefined" &&
+    sessionStorage.getItem("nilia") === "true";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
-      if (mode === "signin") {
-        await signIn(email, password);
-        onClose();
+      if (isFromNilia) {
+        // For nilia users: generate email automatically from username
+        const generatedEmail = generateEmailFromUsername(name);
+
+        if (mode === "signin") {
+          await signIn(generatedEmail, password);
+          onClose();
+        } else {
+          await signUp(generatedEmail, password, name, keepMePosted);
+          onClose();
+        }
       } else {
-        await signUp(email, password, name, keepMePosted);
-        // setShowEmailConfirmation(true);
-        onClose();
+        // For regular users: use email field
+        if (mode === "signin") {
+          await signIn(email, password);
+          onClose();
+        } else {
+          await signUp(email, password, name, keepMePosted);
+          onClose();
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
@@ -70,44 +103,77 @@ export default function AuthModal({
           {mode === "signin" ? "Sign In" : "Sign Up"}
         </h2>
         <form onSubmit={handleSubmit}>
-          {mode === "signup" && (
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-                Username
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-transparent rounded-md dark:bg-[#4A4A4A] dark:text-white"
-                required
-              />
-            </div>
+          {isFromNilia ? (
+            // Nilia flow: Username + Password
+            <>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-transparent rounded-md dark:bg-[#4A4A4A] dark:text-white"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-transparent rounded-md dark:bg-[#4A4A4A] dark:text-white"
+                  required
+                />
+              </div>
+            </>
+          ) : (
+            // Regular flow: Email + Password (and Username for signup)
+            <>
+              {mode === "signup" && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-transparent rounded-md dark:bg-[#4A4A4A] dark:text-white"
+                    required
+                  />
+                </div>
+              )}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-transparent rounded-md dark:bg-[#4A4A4A] dark:text-white"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-transparent rounded-md dark:bg-[#4A4A4A] dark:text-white"
+                  required
+                />
+              </div>
+            </>
           )}
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-transparent rounded-md dark:bg-[#4A4A4A] dark:text-white"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-transparent rounded-md dark:bg-[#4A4A4A] dark:text-white"
-              required
-            />
-          </div>
           <div className="mb-6">
             <label className="flex items-center gap-1 cursor-pointer">
               <input
