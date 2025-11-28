@@ -95,12 +95,12 @@ export function NumericSecretKeyModal({
         </div>
 
         <p className="text-sm sm:text-base text-gray-300 mb-4 sm:mb-6 leading-relaxed text-center">
-          Enter a 4-digit PIN to encrypt your chats.
+          Enter a 4-digit PIN to protect your chats.
           <br />
           <br />
           No one else knows this, so{" "}
-          <strong className="text-white">keep it safe</strong> so you can
-          decrypt your chats in the future.
+          <strong className="text-white">keep it safe</strong> so you can view
+          your chats in the future.
         </p>
 
         {/* PIN Display Dots */}
