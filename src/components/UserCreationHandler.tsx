@@ -62,15 +62,14 @@ export default function UserCreationHandler() {
 
             // Restore nilia settings if user has utm_content="nilia"
             if (result.user?.utm?.utm_content === "nilia") {
-              const currentNiliaFlag = sessionStorage.getItem("nilia");
+              // Set persistent flag (survives browser close)
+              localStorage.setItem("nilia_user", "true");
 
-              // Only set and reload if not already set (avoid infinite loop)
-              if (currentNiliaFlag !== "true") {
+              // Restore session (if not already set)
+              if (sessionStorage.getItem("nilia") !== "true") {
                 sessionStorage.setItem("nilia", "true");
-                console.log("Nilia mode restored from user data, reloading...");
-
-                // Force reload to apply nilia settings
-                window.location.reload();
+                sessionStorage.setItem("theme", "dark");
+                console.log("Nilia mode restored from user data");
               }
             }
           } else {

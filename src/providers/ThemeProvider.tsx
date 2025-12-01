@@ -35,23 +35,33 @@ export default function ThemeProvider({
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    // Check for theme in sessionStorage first
-    const sessionTheme = sessionStorage.getItem("theme");
+    // Check if this is a Nilia user (persistent flag in localStorage)
+    const isNiliaUser = localStorage.getItem("nilia_user") === "true";
 
-    // Migrate from localStorage if needed
-    const localTheme = localStorage.getItem("theme");
-    if (localTheme) {
-      sessionStorage.setItem("theme", localTheme);
-      localStorage.removeItem("theme");
-    }
+    if (isNiliaUser) {
+      // Restore Nilia session from persistent flag
+      sessionStorage.setItem("nilia", "true");
+      sessionStorage.setItem("theme", "dark");
+      document.documentElement.classList.add("dark");
+    } else {
+      // Regular flow - check session storage
+      const sessionTheme = sessionStorage.getItem("theme");
 
-    // Force apply theme from sessionStorage if it exists
-    if (sessionTheme) {
-      const html = document.documentElement;
-      if (sessionTheme === "dark") {
-        html.classList.add("dark");
-      } else {
-        html.classList.remove("dark");
+      // Migrate from localStorage if needed
+      const localTheme = localStorage.getItem("theme");
+      if (localTheme) {
+        sessionStorage.setItem("theme", localTheme);
+        localStorage.removeItem("theme");
+      }
+
+      // Force apply theme from sessionStorage if it exists
+      if (sessionTheme) {
+        const html = document.documentElement;
+        if (sessionTheme === "dark") {
+          html.classList.add("dark");
+        } else {
+          html.classList.remove("dark");
+        }
       }
     }
   }, []);

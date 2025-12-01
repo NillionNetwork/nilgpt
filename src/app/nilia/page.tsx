@@ -17,6 +17,7 @@ export default function Nilia() {
   useEffect(() => {
     setTheme("dark");
     sessionStorage.setItem("nilia", "true");
+    localStorage.setItem("nilia_user", "true");
   }, [setTheme]);
 
   // Capture and store UTM parameters on landing page load
