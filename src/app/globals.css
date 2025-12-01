@@ -112,6 +112,6 @@ a {
     @apply bg-[--background];
   }
   .dark body {
-    @apply bg-transparent;
+    @apply bg-[#191919];
   }
 }
