@@ -498,8 +498,8 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
   return (
     <div className="flex flex-col h-full bg-background">
       {messages.length === 0 ? (
-        <div className="flex-1 flex flex-col items-center justify-center px-4">
-          <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 pb-12 md:pb-4 overflow-y-auto">
+          <div className="w-full max-w-4xl mx-auto flex flex-col items-center my-auto">
             <div className="hidden dark:block relative mb-8">
               <Image
                 src="/img/test_mermaid2.png"
@@ -535,7 +535,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
               )}
             </div>
 
-            <div className="mt-8">
+            <div className="mt-6 md:mt-8 mb-4 md:mb-0">
               <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
                 {getPromptSuggestions(selectedPersona).map(
                   (suggestion, index) => (
