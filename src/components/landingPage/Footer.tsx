@@ -4,7 +4,7 @@ import Link from "next/link";
 const Footer = () => (
   <footer className="p-4">
     <div
-      className="bg-black rounded-xl py-6 px-6 shadow-lg backdrop-blur-sm border border-gray-800/20"
+      className="bg-black dark:bg-transparent rounded-xl py-6 px-6 shadow-lg backdrop-blur-sm border border-gray-800/20"
       style={{
         boxShadow: "0 12px 24px rgba(0, 0, 0, 0.3)",
       }}
@@ -18,12 +18,20 @@ const Footer = () => (
                 alt="nilGPT Logo"
                 width={24}
                 height={24}
+                className="block dark:hidden"
+              />
+              <Image
+                src="/img/white_logo.svg"
+                alt="nilGPT Logo"
+                width={24}
+                height={24}
+                className="hidden dark:block"
               />
               <div className="font-display font-medium text-xl text-white">
                 nilGPT
               </div>
             </div>
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-400 dark:text-white text-sm">
               © {new Date().getFullYear()} nilGPTAI. All rights reserved.
             </p>
           </div>
@@ -32,7 +40,7 @@ const Footer = () => (
               href="https://nillion.notion.site/nilGPT-Terms-of-Service-2261827799b4805bb956e7dbb828310c"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors underline"
+              className="text-gray-400 dark:text-white hover:text-white transition-colors underline"
             >
               Terms of Service
             </a>
@@ -40,13 +48,13 @@ const Footer = () => (
               href="https://nillion.notion.site/nilGPT-Privacy-Policy-2261827799b48083b211d957d127d911"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400 hover:text-white transition-colors underline"
+              className="text-gray-400 dark:text-white hover:text-white transition-colors underline"
             >
               Privacy Policy
             </a>
             <Link
               href="/content-policy"
-              className="text-gray-400 hover:text-white transition-colors underline"
+              className="text-gray-400 dark:text-white hover:text-white transition-colors underline"
             >
               Content Policy
             </Link>
@@ -57,7 +65,7 @@ const Footer = () => (
           <div className="flex flex-col gap-3 items-start">
             <Link
               href="/blog"
-              className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
+              className="text-gray-400 dark:text-white hover:text-white transition-colors flex items-center gap-2 text-sm"
             >
               <Image
                 src="/img/white_logo.svg"
@@ -70,7 +78,7 @@ const Footer = () => (
             <a
               href="https://x.com/nilgpt_"
               target="_blank"
-              className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
+              className="text-gray-400 dark:text-white hover:text-white transition-colors flex items-center gap-2 text-sm"
               rel="noopener"
             >
               <Image
@@ -84,7 +92,7 @@ const Footer = () => (
             <a
               href="https://github.com/NillionNetwork/nilgpt"
               target="_blank"
-              className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
+              className="text-gray-400 dark:text-white hover:text-white transition-colors flex items-center gap-2 text-sm"
               rel="noopener"
             >
               <Image
@@ -101,7 +109,7 @@ const Footer = () => (
             <a
               href="https://github.com/NillionNetwork/nilai"
               target="_blank"
-              className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
+              className="text-gray-400 dark:text-white hover:text-white transition-colors flex items-center gap-2 text-sm"
               rel="noopener"
             >
               <Image
@@ -115,7 +123,7 @@ const Footer = () => (
             <a
               href="https://github.com/NillionNetwork/nildb"
               target="_blank"
-              className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
+              className="text-gray-400 dark:text-white hover:text-white transition-colors flex items-center gap-2 text-sm"
               rel="noopener"
             >
               <Image
@@ -129,7 +137,7 @@ const Footer = () => (
             <a
               href="https://github.com/NillionNetwork/nilcc"
               target="_blank"
-              className="text-gray-400 hover:text-white transition-colors flex items-center gap-2 text-sm"
+              className="text-gray-400 dark:text-white hover:text-white transition-colors flex items-center gap-2 text-sm"
               rel="noopener"
             >
               <Image

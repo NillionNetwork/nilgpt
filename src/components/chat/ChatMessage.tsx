@@ -44,11 +44,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const bubbleClasses = `
     rounded-tl-2xl rounded-tr rounded-br-2xl rounded-bl-2xl px-6 py-3 max-w-[80%] sm:max-w-[75%] lg:max-w-[65%]
     break-words overflow-wrap-anywhere
-    ${isUser ? "bg-white text-black" : "bg-transparent text-black"}
+    ${isUser ? "bg-white text-black" : "bg-transparent text-black dark:text-white"}
   `;
 
   const markdownProseClasses = `
-    ${isUser ? "prose prose-invert text-black" : "prose"}
+    ${isUser ? "prose prose-invert text-black" : "prose dark:prose-invert"}
       prose-sm sm:prose-base
       max-w-none
       break-words overflow-wrap-anywhere
@@ -58,13 +58,18 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     <>
       {message.attachments && message.attachments.length > 0 && (
         <div className="flex gap-1 items-center ml-auto w-fit mb-1">
-          <span className="text-neutral-500 text-xs">Attached</span>
+          <span className="text-neutral-500 dark:text-gray-400 text-xs">
+            Attached
+          </span>
           <div className="flex gap-1 items-center">
             {message.attachments.map((attachment) => {
               const AttachmentIcon = getMessageAttachmentIcon(attachment);
               return (
                 <div key={attachment}>
-                  <AttachmentIcon size={14} className="text-neutral-500" />
+                  <AttachmentIcon
+                    size={14}
+                    className="text-neutral-500 dark:text-gray-400"
+                  />
                 </div>
               );
             })}
@@ -87,7 +92,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                 <div className="flex mt-2 space-x-2 gap-1 items-center">
                   <button
                     onClick={() => copyToClipboard(message.content as string)}
-                    className="text-neutral-500 hover:text-neutral-700"
+                    className="text-neutral-500 dark:text-gray-400 hover:text-neutral-700 dark:hover:text-gray-300"
                     title={isCopied ? "Copied!" : "Copy to clipboard"}
                   >
                     {isCopied ? <TbCheck size={16} /> : <TbCopy size={16} />}
@@ -96,14 +101,17 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                   {message.sources && message.sources.length > 0 && (
                     <HoverCard openDelay={300}>
                       <HoverCardTrigger className="flex items-center gap-1 group">
-                        <TbWorld size={16} className="text-neutral-500" />
-                        <span className="cursor-pointer text-neutral-500 text-sm group-hover:underline">
+                        <TbWorld
+                          size={16}
+                          className="text-neutral-500 dark:text-gray-400"
+                        />
+                        <span className="cursor-pointer text-neutral-500 dark:text-gray-400 text-sm group-hover:underline">
                           Sources
                         </span>
                       </HoverCardTrigger>
                       <HoverCardContent align="start">
                         <div className="flex mt-2 space-x-2 flex-col">
-                          <span className="text-neutral-500 text-sm">
+                          <span className="text-neutral-500 dark:text-gray-400 text-sm">
                             Sources used to generate this response:
                           </span>
 
@@ -122,7 +130,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                                     target="_blank"
                                     rel="noopener noreferrer"
                                   >
-                                    <span className="text-neutral-500 text-sm hover:underline">
+                                    <span className="text-neutral-500 dark:text-gray-400 text-sm hover:underline">
                                       {sourceDomain}
                                     </span>
                                   </a>

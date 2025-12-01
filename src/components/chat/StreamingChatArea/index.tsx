@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { TbRefresh } from "react-icons/tb";
@@ -33,6 +34,15 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
   const { setHasMessages, selectedPersona } = useApp();
   const { encrypt, hasSecretKey } = useEncryption();
   const { isPWA } = useIsPWA();
+
+  // Get display name for greeting
+  const getUserName = () => {
+    if (!user) return "";
+    if (user.authProvider === "supabase") {
+      return user.name || user.email?.split("@")[0] || "";
+    }
+    return user.name || "";
+  };
 
   /*
    CHAT
@@ -486,10 +496,35 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[#F7F6F2]">
+    <div className="flex flex-col h-full bg-background">
       {messages.length === 0 ? (
         <div className="flex-1 flex flex-col items-center justify-center px-4">
           <div className="w-full max-w-4xl mx-auto flex flex-col items-center">
+            <div className="hidden dark:block relative mb-8">
+              <Image
+                src="/img/test_mermaid2.png"
+                alt="Nilia Hero Image"
+                width={250}
+                height={175}
+                className="mb-0"
+              />
+              {user && (
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 text-center w-full px-4 md:px-0 md:w-auto">
+                  <p
+                    className="text-white text-2xl md:text-4xl font-normal leading-tight"
+                    style={{ fontFamily: "'Inter Tight', sans-serif" }}
+                  >
+                    <span className="whitespace-nowrap block">
+                      Hey {getUserName()},
+                    </span>
+                    <span className="block md:whitespace-nowrap">
+                      I&apos;m here whenever you need me.
+                    </span>
+                  </p>
+                </div>
+              )}
+            </div>
+
             <div className="w-full max-w-2xl">
               {!hasDecryptionFailures && (
                 <ChatInput
@@ -509,10 +544,10 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
                       onClick={() =>
                         handleSendMessage({ content: suggestion.text })
                       }
-                      className="flex items-center space-x-2 p-3 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 text-left group w-fit"
+                      className="flex items-center space-x-2 p-3 bg-white dark:bg-[#202020] border border-gray-200 dark:border-white/[0.07] rounded-xl hover:bg-gray-50 dark:hover:bg-[#2a2a2a] hover:border-gray-300 dark:hover:border-white/[0.12] transition-all duration-200 text-left group w-fit"
                     >
                       <div className="text-lg">{suggestion.emoji}</div>
-                      <span className="text-sm font-medium text-gray-500 group-hover:text-gray-700">
+                      <span className="text-sm font-medium text-gray-500 dark:text-white group-hover:text-gray-700 dark:group-hover:text-white">
                         {suggestion.text}
                       </span>
                     </button>

@@ -24,7 +24,7 @@ import type { IChatItem } from "@/types/chat";
 import { getPersonaFromUTM } from "@/utils/utmPersonaMapping";
 import { getStoredUTMParameters } from "@/utils/utmTracking";
 import AttestationModal from "../AttestationModal";
-import { SecretKeyModal } from "../auth/SecretKeyModal";
+import { PassphraseModal } from "../auth/PassphraseModal";
 import { Dialog } from "../ui/dialog";
 
 interface SidebarProps {
@@ -414,9 +414,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
                 alt="nilGPT Logo"
                 width={24}
                 height={24}
+                className="dark:hidden"
               />
               <Image
-                className="ml-2"
+                src="/img/reskin_logo.svg"
+                alt="nilGPT Logo"
+                width={24}
+                height={24}
+                className="hidden dark:block"
+              />
+              <Image
+                className="ml-2 dark:hidden"
                 src="/img/nilGPT_whiteText.svg"
                 alt="nilGPT Logo"
                 width={65}
@@ -448,7 +456,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
           >
             <div className="flex flex-row justify-between items-center  ">
               <div className="text-white text-center text-md ">New Chat</div>
-              <div className="font-normal text-3xl text-[#FFC971] p-0 m-0">
+              <div className="font-normal text-3xl text-[#FFC971] dark:text-white p-0 m-0">
                 +
               </div>
             </div>
@@ -619,7 +627,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
                 e.stopPropagation();
                 setIsUserMenuOpen(!isUserMenuOpen);
               }}
-              className="w-8 h-8 rounded-full bg-[#FFC971] flex items-center justify-center text-sm font-medium text-black shrink-0 hover:bg-[#FFD584] transition-colors"
+              className="w-8 h-8 rounded-full bg-[#FFC971] dark:bg-[#F7C5FF] flex items-center justify-center text-sm font-medium text-black shrink-0 hover:bg-[#FFD584] dark:hover:bg-[#FEF9FF] transition-colors"
             >
               {initials}
             </button>
@@ -659,7 +667,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
       </div>
 
       {/* Secret Key Modal */}
-      <SecretKeyModal
+      <PassphraseModal
         isOpen={showSecretKeyModal}
         onClose={() => setShowSecretKeyModal(false)}
       />

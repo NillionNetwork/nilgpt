@@ -33,7 +33,15 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
-  const [selectedPersona, setSelectedPersona] = useState("personal-assistant");
+  const [selectedPersona, setSelectedPersona] = useState(() => {
+    if (typeof window !== "undefined") {
+      const niliaMode = sessionStorage.getItem("nilia");
+      if (niliaMode === "true") {
+        return "wellness-assistant";
+      }
+    }
+    return "personal-assistant";
+  });
   const [hasMessages, setHasMessages] = useState(false);
   const [userSecretKeySeed, setUserSecretKeySeed] = useState<string | null>(
     null,
@@ -52,8 +60,25 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  // Check UTM parameters and set persona accordingly (HIGHEST PRIORITY)
+  // Check for nilia mode flag and set persona accordingly (HIGHEST PRIORITY)
   useEffect(() => {
+    const niliaMode = sessionStorage.getItem("nilia");
+    if (niliaMode === "true") {
+      console.log(
+        "Nilia mode detected, setting persona to: wellness-assistant",
+      );
+      setSelectedPersona("wellness-assistant");
+    }
+  }, []);
+
+  // Check UTM parameters and set persona accordingly (SECOND PRIORITY after nilia mode)
+  useEffect(() => {
+    // Only check UTM if nilia mode is not active
+    const niliaMode = sessionStorage.getItem("nilia");
+    if (niliaMode === "true") {
+      return; // Nilia mode takes precedence
+    }
+
     const utmParams = getStoredUTMParameters();
     const personaFromUTM = getPersonaFromUTM(utmParams);
 
