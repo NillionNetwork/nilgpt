@@ -19,11 +19,12 @@ export default function UserCreationHandler() {
   }, [user?.id, user?.isAuthenticated]);
 
   useEffect(() => {
-    // Only run if user is authenticated and we haven't attempted creation yet
-    if (!userKey || hasAttemptedCreation.current) {
+    // Only run if user is authenticated
+    if (!userKey) {
       return;
     }
 
+    // Always reset and run on userKey change (new login/session)
     hasAttemptedCreation.current = true;
 
     const createUserInNilDB = async () => {
