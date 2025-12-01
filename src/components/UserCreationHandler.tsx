@@ -61,10 +61,16 @@ export default function UserCreationHandler() {
 
             // Restore nilia settings if user has utm_content="nilia"
             if (result.user?.utm?.utm_content === "nilia") {
-              sessionStorage.setItem("nilia", "true");
+              const currentNiliaFlag = sessionStorage.getItem("nilia");
 
-              // Force reload to apply nilia settings
-              window.location.reload();
+              // Only set and reload if not already set (avoid infinite loop)
+              if (currentNiliaFlag !== "true") {
+                sessionStorage.setItem("nilia", "true");
+                console.log("Nilia mode restored from user data, reloading...");
+
+                // Force reload to apply nilia settings
+                window.location.reload();
+              }
             }
           } else {
             console.log("User created in nilDB successfully");
