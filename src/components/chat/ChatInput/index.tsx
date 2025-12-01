@@ -326,7 +326,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
                 }
                 className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors duration-200 ${
                   input.trim() && !isOverLimit && isAuthenticated
-                    ? "bg-neutral-800 dark:bg-neutral-700 text-yellow-400 hover:bg-neutral-700 dark:hover:bg-neutral-600"
+                    ? "bg-neutral-800 dark:bg-neutral-700 text-yellow-400 hover:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-pink-400"
                     : "bg-neutral-300 dark:bg-neutral-600 text-neutral-500 dark:text-neutral-400"
                 }`}
               >
