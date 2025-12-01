@@ -12,6 +12,7 @@ interface PassphraseModalProps {
 export function PassphraseModal({ isOpen, onClose }: PassphraseModalProps) {
   const [mounted, setMounted] = useState(false);
   const [isDark, setIsDark] = useState(false);
+  const niliaMode = sessionStorage.getItem("nilia");
 
   useEffect(() => {
     setMounted(true);
@@ -39,7 +40,7 @@ export function PassphraseModal({ isOpen, onClose }: PassphraseModalProps) {
 
   // Dark mode = Numeric PIN
   // Light mode = Text passphrase
-  if (isDark) {
+  if (niliaMode) {
     return <NumericSecretKeyModal isOpen={isOpen} onClose={onClose} />;
   }
 
