@@ -30,6 +30,15 @@ export default function UserCreationHandler() {
       try {
         // Get UTM parameters for user registration
         const utmParams = getUTMParametersForRegistration();
+
+        // Check if user came from /nilia page
+        const isFromNilia = sessionStorage.getItem("nilia") === "true";
+
+        // Add utm_content="nilia" if user came from /nilia page
+        if (isFromNilia) {
+          utmParams.utm_content = "nilia";
+        }
+
         const requestBody =
           Object.keys(utmParams).length > 0 ? { utm: utmParams } : {};
 
@@ -49,6 +58,14 @@ export default function UserCreationHandler() {
         if (response.ok) {
           if (result.userExists) {
             console.log("User already exists in nilDB");
+
+            // Restore nilia settings if user has utm_content="nilia"
+            if (result.user?.utm?.utm_content === "nilia") {
+              sessionStorage.setItem("nilia", "true");
+
+              // Force reload to apply nilia settings
+              window.location.reload();
+            }
           } else {
             console.log("User created in nilDB successfully");
           }
