@@ -13,11 +13,8 @@ const SignInButton: React.FC<SignInButtonProps> = ({ onSignIn }) => {
     <button
       type="button"
       onClick={onSignIn}
-      className="px-4 py-2 text-sm font-medium text-neutral-600 dark:text-white bg-neutral-100 dark:bg-transparent rounded-full hover:bg-neutral-200 dark:hover:bg-white/10 transition-colors mr-2"
+      className={`px-4 py-2 text-sm font-medium text-neutral-600 dark:text-white bg-neutral-100 dark:bg-transparent rounded-full hover:bg-neutral-200 dark:hover:bg-white/10 transition-colors mr-2 ${theme === "dark" ? "plausible-event-name=Sign+In+Clicked+-+Nilia" : ""}`}
       data-umami-event="Sign In Clicked"
-      {...(theme === "dark" && {
-        "plausible-event-name": "Sign In Clicked -Nilia",
-      })}
     >
       Sign in
     </button>
