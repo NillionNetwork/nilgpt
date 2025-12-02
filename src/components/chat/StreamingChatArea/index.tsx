@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "next-themes";
 import { TbRefresh } from "react-icons/tb";
 import { DEFAULT_MODEL } from "@/config/llm";
 import { getPersonaById } from "@/config/personas";
@@ -34,6 +35,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
   const { setHasMessages, selectedPersona } = useApp();
   const { encrypt, hasSecretKey } = useEncryption();
   const { isPWA } = useIsPWA();
+  const { theme } = useTheme();
 
   // Get display name for greeting
   const getUserName = () => {
