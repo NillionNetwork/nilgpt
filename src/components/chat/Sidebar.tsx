@@ -13,6 +13,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useApp } from "@/contexts/AppContext";
@@ -46,6 +47,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
     setChatHistory,
     chatHistory,
   } = useApp();
+  const { theme } = useTheme();
 
   const [loading, setLoading] = useState(true);
   const [isAttestationModalOpen, setIsAttestationModalOpen] = useState(false);
@@ -444,7 +446,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
 
         <div className="flex-grow overflow-y-auto overflow-x-hidden px-2">
           <button
-            data-umami-event="New Chat Clicked"
+            data-umami-event={
+              theme === "dark" ? "New Chat Clicked - Nilia" : "New Chat Clicked"
+            }
             disabled={!user}
             className={`w-full text-sm font-medium text-white transition-colors text-left px-4 py-1 rounded-lg plausible-event-name=New+Chat+Clicked+-+Nilia
               ${
@@ -656,7 +660,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
               <button
                 onClick={handleSignOut}
                 className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-[#333] rounded-b-lg transition-colors plausible-event-name=Sign+Out+Clicked+-+Nilia"
-                data-umami-event="Sign Out Clicked"
+                data-umami-event={
+                  theme === "dark"
+                    ? "Sign Out Clicked - Nilia"
+                    : "Sign Out Clicked"
+                }
               >
                 <LogOut size={16} />
                 Sign Out

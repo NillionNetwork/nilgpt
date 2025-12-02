@@ -64,7 +64,11 @@ const Header = ({ targetTheme = "light" }: HeaderProps) => {
           <a
             href="/app"
             onClick={getThemeNavigationHandler("/app", targetTheme)}
-            data-umami-event="Go To App Clicked"
+            data-umami-event={
+              targetTheme === "dark"
+                ? "Go To App Clicked - Nilia"
+                : "Go To App Clicked"
+            }
             className={`bg-[#F7F6F2] dark:bg-[#747474] text-black dark:text-white px-4 py-2 font-medium text-lg rounded-full hover:bg-[#F0EFE9] dark:hover:bg-[#222222] border border-transparent dark:hover:border-white transition-colors flex items-center gap-2 cursor-pointer ${targetTheme === "dark" ? "plausible-event-name=Go+To+App+Clicked+-+Nilia" : ""}`}
           >
             <div className="w-2 h-2 bg-black dark:bg-white rounded-full"></div>
