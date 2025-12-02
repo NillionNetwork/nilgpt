@@ -227,7 +227,13 @@ export default function AuthModal({
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white dark:text-black bg-black dark:bg-white rounded-md hover:bg-gray-800 dark:hover:bg-gray-100"
               data-umami-event={
-                mode === "signin" ? "Sign In Clicked" : "Sign Up Clicked"
+                resolvedTheme === "dark"
+                  ? mode === "signin"
+                    ? "Sign In Clicked - Nilia"
+                    : "Sign Up Clicked - Nilia"
+                  : mode === "signin"
+                    ? "Sign In Clicked"
+                    : "Sign Up Clicked"
               }
             >
               {mode === "signin" ? "Sign In" : "Sign Up"}
