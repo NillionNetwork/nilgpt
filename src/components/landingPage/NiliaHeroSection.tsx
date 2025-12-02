@@ -44,7 +44,7 @@ export default function NiliaHeroSection() {
         href="/app"
         onClick={getThemeNavigationHandler("/app", "dark")}
         dataUmamiEvent="Let's Chat Clicked - Nilia"
-        className="mb-12 md:mb-16"
+        className="mb-12 md:mb-16 plausible-event-name=Let's+Chat+Clicked+-+Nilia"
       />
 
       {/* Chat Preview Mockup */}
