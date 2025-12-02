@@ -50,6 +50,7 @@ export default function RootLayout({
         async
         src="https://cloud.umami.is/script.js"
         data-website-id="5e52f8b8-ca50-4a36-af8a-91b57f0b27b6"
+        data-auto-track="false"
       />
       <ServiceWorkerRegistration />
     </html>
