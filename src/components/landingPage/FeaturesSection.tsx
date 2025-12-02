@@ -99,7 +99,7 @@ const FeaturesSection = ({ targetTheme = "light" }: FeaturesSectionProps) => (
             href="/app"
             onClick={getThemeNavigationHandler("/app", targetTheme)}
             dataUmamiEvent="Chat Now Clicked"
-            className="text-xl"
+            className="text-xl plausible-event-name=Chat+Now+Clicked+-+Nilia "
           />
         </div>
       </div>

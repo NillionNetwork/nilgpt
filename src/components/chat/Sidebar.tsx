@@ -450,7 +450,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
               theme === "dark" ? "New Chat Clicked - Nilia" : "New Chat Clicked"
             }
             disabled={!user}
-            className={`w-full text-sm font-medium text-white transition-colors text-left px-4 py-1 rounded-lg
+            className={`w-full text-sm font-medium text-white transition-colors text-left px-4 py-1 rounded-lg plausible-event-name=New+Chat+Clicked+-+Nilia
               ${
                 !user
                   ? "opacity-50 cursor-not-allowed hover:bg-transparent"
@@ -659,7 +659,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
               </button>
               <button
                 onClick={handleSignOut}
-                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-[#333] rounded-b-lg transition-colors"
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-[#333] rounded-b-lg transition-colors plausible-event-name=Sign+Out+Clicked+-+Nilia"
                 data-umami-event={
                   theme === "dark"
                     ? "Sign Out Clicked - Nilia"

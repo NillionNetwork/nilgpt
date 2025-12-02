@@ -46,6 +46,17 @@ export default function RootLayout({
         src="https://cloud.umami.is/script.js"
         data-website-id="4f63bc18-938c-46f0-a0c1-873a43098e28"
       />
+      <Script async src="https://plausible.io/js/pa-HsxD1Uhm-fT87N1SJSFBZ.js" />
+      <Script id="plausible-init" strategy="afterInteractive">
+        {`
+          window.plausible = window.plausible || function () {
+            (plausible.q = plausible.q || []).push(arguments)
+          };
+          plausible.init = plausible.init || function(i){ plausible.o = i || {}; };
+          plausible.init();
+        `}
+      </Script>
+
       <ServiceWorkerRegistration />
     </html>
   );

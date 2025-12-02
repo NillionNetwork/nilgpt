@@ -161,7 +161,7 @@ export function NumericSecretKeyModal({
           type="button"
           onClick={handleSubmit}
           disabled={pin.length !== PIN_LENGTH}
-          className={`w-full py-2.5 sm:py-3 px-4 sm:px-6 rounded-full text-sm sm:text-base font-medium transition-colors ${
+          className={`w-full py-2.5 sm:py-3 px-4 sm:px-6 rounded-full text-sm sm:text-base font-medium transition-colors plausible-event-name=Unlock+Clicked+-+Nilia ${
             pin.length === PIN_LENGTH
               ? "bg-[#FFFFFF] text-black hover:bg-[#FFFFFF]"
               : "bg-[#333] text-[#666] cursor-not-allowed"

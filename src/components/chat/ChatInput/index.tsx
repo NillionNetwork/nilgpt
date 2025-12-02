@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { TbFileTypePdf, TbPhoto, TbWorldSearch, TbX } from "react-icons/tb";
 import { toast } from "sonner";
@@ -31,6 +32,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
   const isAuthenticated = !!user;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setSelectedPersona, hasMessages, selectedPersona } = useApp();
+  const { theme } = useTheme();
 
   const [input, setInput] = useState("");
   const [isMobile, setIsMobile] = useState(false);
@@ -155,6 +157,11 @@ const ChatInput: React.FC<IChatInputProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading || !isAuthenticated || isOverLimit) return;
+
+    if (theme === "dark") {
+      //@ts-ignore
+      window.plausible?.("Message Sent - Nilia");
+    }
 
     onSendMessage({
       content: input,
