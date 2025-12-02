@@ -225,7 +225,7 @@ export default function AuthModal({
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white dark:text-black bg-black dark:bg-white rounded-md hover:bg-gray-800 dark:hover:bg-gray-100"
+              className={`px-4 py-2 text-sm font-medium text-white dark:text-black bg-black dark:bg-white rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 ${resolvedTheme === "dark" ? (mode === "signin" ? "plausible-event-name=Sign+In+Clicked+-+Nilia" : "plausible-event-name=Sign+Up+Clicked+-+Nilia") : ""}`}
               data-umami-event={
                 mode === "signin" ? "Sign In Clicked" : "Sign Up Clicked"
               }

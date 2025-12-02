@@ -544,7 +544,7 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
                       onClick={() =>
                         handleSendMessage({ content: suggestion.text })
                       }
-                      className="flex items-center space-x-2 p-3 bg-white dark:bg-[#202020] border border-gray-200 dark:border-white/[0.07] rounded-xl hover:bg-gray-50 dark:hover:bg-[#2a2a2a] hover:border-gray-300 dark:hover:border-white/[0.12] transition-all duration-200 text-left group w-fit"
+                      className={`flex items-center space-x-2 p-3 bg-white dark:bg-[#202020] border border-gray-200 dark:border-white/[0.07] rounded-xl hover:bg-gray-50 dark:hover:bg-[#2a2a2a] hover:border-gray-300 dark:hover:border-white/[0.12] transition-all duration-200 text-left group w-fit ${theme === "dark" ? "plausible-event-name=Message+Sent+-+Nilia" : ""}`}
                     >
                       <div className="text-lg">{suggestion.emoji}</div>
                       <span className="text-sm font-medium text-gray-500 dark:text-white group-hover:text-gray-700 dark:group-hover:text-white">

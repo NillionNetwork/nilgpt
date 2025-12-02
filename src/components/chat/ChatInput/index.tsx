@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "next-themes";
 import { TbFileTypePdf, TbPhoto, TbWorldSearch, TbX } from "react-icons/tb";
 import { toast } from "sonner";
 import { useFilePicker } from "use-file-picker";
@@ -31,6 +32,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
   const isAuthenticated = !!user;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { setSelectedPersona, hasMessages, selectedPersona } = useApp();
+  const { theme } = useTheme();
 
   const [input, setInput] = useState("");
   const [isMobile, setIsMobile] = useState(false);
@@ -324,7 +326,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
                 disabled={
                   isLoading || !input.trim() || !isAuthenticated || isOverLimit
                 }
-                className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors duration-200 ${
+                className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors duration-200 ${theme === "dark" ? "plausible-event-name=Message+Sent+-+Nilia" : ""} ${
                   input.trim() && !isOverLimit && isAuthenticated
                     ? "bg-neutral-800 dark:bg-neutral-700 text-yellow-400 hover:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-pink-400"
                     : "bg-neutral-300 dark:bg-neutral-600 text-neutral-500 dark:text-neutral-400"
