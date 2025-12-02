@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 import { useTheme } from "next-themes";
+import { useEffect, useRef, useState } from "react";
 import { TbRefresh } from "react-icons/tb";
 import { DEFAULT_MODEL } from "@/config/llm";
 import { getPersonaById } from "@/config/personas";

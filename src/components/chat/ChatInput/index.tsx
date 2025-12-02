@@ -158,6 +158,11 @@ const ChatInput: React.FC<IChatInputProps> = ({
     e.preventDefault();
     if (!input.trim() || isLoading || !isAuthenticated || isOverLimit) return;
 
+    if (theme === "dark") {
+      //@ts-ignore
+      window.plausible?.("Message Sent - Nilia");
+    }
+
     onSendMessage({
       content: input,
       model:
@@ -326,7 +331,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
                 disabled={
                   isLoading || !input.trim() || !isAuthenticated || isOverLimit
                 }
-                className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors duration-200 ${theme === "dark" ? "plausible-event-name=Message+Sent+-+Nilia" : ""} ${
+                className={`w-9 h-9 flex items-center justify-center rounded-lg transition-colors duration-200 ${
                   input.trim() && !isOverLimit && isAuthenticated
                     ? "bg-neutral-800 dark:bg-neutral-700 text-yellow-400 hover:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-pink-400"
                     : "bg-neutral-300 dark:bg-neutral-600 text-neutral-500 dark:text-neutral-400"
