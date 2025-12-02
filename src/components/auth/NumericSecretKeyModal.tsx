@@ -166,6 +166,7 @@ export function NumericSecretKeyModal({
               ? "bg-[#FFFFFF] text-black hover:bg-[#FFFFFF]"
               : "bg-[#333] text-[#666] cursor-not-allowed"
           }`}
+          data-umami-event="Unlock Clicked - Nilia"
         >
           Unlock
         </button>
