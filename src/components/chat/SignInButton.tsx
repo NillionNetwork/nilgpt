@@ -12,7 +12,9 @@ const SignInButton: React.FC<SignInButtonProps> = ({ onSignIn }) => {
   const handleClick = () => {
     // Manual tracking for Nilia (dark mode only)
     if (theme === "dark") {
-      window.umami?.track("Sign In Clicked - Nilia");
+      window.umami?.track("Sign In Clicked - Nilia", {
+        website: "5e52f8b8-ca50-4a36-af8a-91b57f0b27b6",
+      });
     }
     onSignIn();
   };
