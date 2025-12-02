@@ -19,17 +19,27 @@ export default function UserCreationHandler() {
   }, [user?.id, user?.isAuthenticated]);
 
   useEffect(() => {
-    // Only run if user is authenticated and we haven't attempted creation yet
-    if (!userKey || hasAttemptedCreation.current) {
+    // Only run if user is authenticated
+    if (!userKey) {
       return;
     }
 
+    // Always reset and run on userKey change (new login/session)
     hasAttemptedCreation.current = true;
 
     const createUserInNilDB = async () => {
       try {
         // Get UTM parameters for user registration
         const utmParams = getUTMParametersForRegistration();
+
+        // Check if user came from /nilia page
+        const isFromNilia = sessionStorage.getItem("nilia") === "true";
+
+        // Add utm_content="nilia" if user came from /nilia page
+        if (isFromNilia) {
+          utmParams.utm_content = "nilia";
+        }
+
         const requestBody =
           Object.keys(utmParams).length > 0 ? { utm: utmParams } : {};
 
@@ -49,6 +59,19 @@ export default function UserCreationHandler() {
         if (response.ok) {
           if (result.userExists) {
             console.log("User already exists in nilDB");
+
+            // Restore nilia settings if user has utm_content="nilia"
+            if (result.user?.utm?.utm_content === "nilia") {
+              // Set persistent flag (survives browser close)
+              localStorage.setItem("nilia_user", "true");
+
+              // Restore session (if not already set)
+              if (sessionStorage.getItem("nilia") !== "true") {
+                sessionStorage.setItem("nilia", "true");
+                sessionStorage.setItem("theme", "dark");
+                console.log("Nilia mode restored from user data");
+              }
+            }
           } else {
             console.log("User created in nilDB successfully");
           }

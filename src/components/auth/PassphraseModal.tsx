@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NumericSecretKeyModal } from "./NumericSecretKeyModal";
 import { SecretKeyModal } from "./SecretKeyModal";
 
@@ -10,13 +10,13 @@ interface PassphraseModalProps {
 }
 
 export function PassphraseModal({ isOpen, onClose }: PassphraseModalProps) {
-  const [niliaMode, setNiliaMode] = useState<string | null>(null);
+  // Initialize from sessionStorage to avoid flash
+  const [niliaMode] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return sessionStorage.getItem("nilia");
+  });
 
-  useEffect(() => {
-    setNiliaMode(sessionStorage.getItem("nilia"));
-  }, []);
-
-  if (niliaMode) {
+  if (niliaMode === "true") {
     return <NumericSecretKeyModal isOpen={isOpen} onClose={onClose} />;
   }
 

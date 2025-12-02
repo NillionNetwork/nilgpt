@@ -45,12 +45,14 @@ export async function POST(request: NextRequest) {
 
       // Check if user was found
       if (userResult.result && userResult.result.length > 0) {
-        // User exists
+        // User exists - return their data including UTM
+        const existingUser = userResult.result[0];
         return NextResponse.json({
           success: true,
           message: "User already exists",
           provider: auth.authProvider,
           userExists: true,
+          user: existingUser,
         });
       }
 

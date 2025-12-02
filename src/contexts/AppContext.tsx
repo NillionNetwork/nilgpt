@@ -68,6 +68,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
         "Nilia mode detected, setting persona to: wellness-assistant",
       );
       setSelectedPersona("wellness-assistant");
+
+      // Set theme to dark for nilia mode
+      sessionStorage.setItem("theme", "dark");
     }
   }, []);
 
