@@ -42,9 +42,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const isUser = message.role === "user";
 
   const bubbleClasses = `
-    rounded-tl-2xl rounded-tr rounded-br-2xl rounded-bl-2xl px-6 py-3 max-w-[80%] sm:max-w-[75%] lg:max-w-[65%]
+    rounded-tl-2xl rounded-tr rounded-br-2xl rounded-bl-2xl px-6 py-3
+    ${
+      isUser
+        ? "max-w-[80%] sm:max-w-[75%] lg:max-w-[65%] bg-white text-black"
+        : "max-w-full bg-transparent text-black dark:text-white"
+    }
     break-words overflow-wrap-anywhere
-    ${isUser ? "bg-white text-black" : "bg-transparent text-black dark:text-white"}
   `;
 
   const markdownProseClasses = `
