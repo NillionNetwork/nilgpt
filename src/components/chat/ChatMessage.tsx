@@ -104,12 +104,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 
                   {message.sources && message.sources.length > 0 && (
                     <HoverCard openDelay={300}>
-                      <HoverCardTrigger className="flex items-center gap-1 group">
-                        <TbWorld
-                          size={16}
-                          className="text-neutral-500 dark:text-gray-400"
-                        />
-                        <span className="cursor-pointer text-neutral-500 dark:text-gray-400 text-sm group-hover:underline">
+                      <HoverCardTrigger
+                        tabIndex={0}
+                        className="flex items-center gap-1 group cursor-pointer text-neutral-500 dark:text-gray-400 hover:text-neutral-700 dark:hover:text-gray-300"
+                      >
+                        <TbWorld size={16} />
+                        <span className="text-sm group-hover:underline">
                           Sources
                         </span>
                       </HoverCardTrigger>
