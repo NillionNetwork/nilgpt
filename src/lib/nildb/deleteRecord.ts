@@ -17,6 +17,14 @@ export async function deleteRecord(
     throw new Error("Collection ID is required");
   }
 
+  if (
+    !filter ||
+    typeof filter !== "object" ||
+    Object.keys(filter).length === 0
+  ) {
+    throw new Error("Filter is required and cannot be empty.");
+  }
+
   const deleteRequest: DeleteDataRequest = {
     collection: collectionId,
     filter,
