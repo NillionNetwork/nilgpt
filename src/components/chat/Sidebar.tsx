@@ -58,6 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
   );
   const [isDeleting, setIsDeleting] = useState(false);
   const [isRenaming, setIsRenaming] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
   const [editingChatId, setEditingChatId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
   const staleChatsRef = useRef(false);
@@ -396,6 +397,50 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
     setIsUserMenuOpen(false);
   };
 
+  const handleDeleteAccount = async () => {
+    if (!user?.id) {
+      console.error("No user ID available");
+      return;
+    }
+
+    // Confirm deletion
+    const confirmed = window.confirm(
+      "Are you sure you want to delete your account? This action cannot be undone.",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setIsDeletingAccount(true);
+    setIsUserMenuOpen(false);
+
+    try {
+      const response = await fetch("/api/deleteAccount", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: user.id }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        alert("Account deleted successfully. You will be signed out.");
+        await signOut();
+        router.push("/app");
+      } else {
+        alert(`Failed to delete account: ${data.error || "Unknown error"}`);
+      }
+    } catch (error) {
+      console.error("Error deleting account:", error);
+      alert("An error occurred while deleting your account.");
+    } finally {
+      setIsDeletingAccount(false);
+    }
+  };
+
   return (
     <div
       className={`
@@ -656,6 +701,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
               >
                 <ShieldCheck size={16} />
                 View Attestation
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={isDeletingAccount}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm text-red-400 hover:bg-[#333] transition-colors"
+              >
+                <Trash2Icon size={16} />
+                {isDeletingAccount ? "Deleting..." : "Delete Account"}
               </button>
               <button
                 onClick={handleSignOut}
