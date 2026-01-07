@@ -421,7 +421,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ user_id: user.id }),
       });
 
       const data = await response.json();
