@@ -1,48 +1,18 @@
 // api/deleteAccount/route.ts
-import { type NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { type NextRequest, NextResponse } from "next/server";
 import { v5 as uuidv5 } from "uuid";
+import { requireAuth } from "@/lib/auth/unifiedAuth";
 import { deleteRecord } from "@/lib/nildb/deleteRecord";
 import { setupClient } from "@/lib/nildb/setupClient";
 
-// Helper function to check if a string is a UUID
-function isUUID(str: string): boolean {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-  return uuidRegex.test(str);
-}
-
-// Helper function to check if a string is a Privy DID
-function isPrivyDID(str: string): boolean {
-  return str.startsWith("did:privy:");
-}
-
 export async function DELETE(request: NextRequest) {
   try {
-    const { user_id } = await request.json();
-
-    if (!user_id) {
+    const auth = await requireAuth(request);
+    if (!auth.isAuthenticated || !auth.userId || !auth.authProvider) {
       return NextResponse.json(
-        { success: false, error: "user_id is required" },
-        { status: 400 },
-      );
-    }
-
-    // Determine provider based on user_id format
-    let provider: "supabase" | "privy" | null = null;
-
-    if (isUUID(user_id)) {
-      provider = "supabase";
-    } else if (isPrivyDID(user_id)) {
-      provider = "privy";
-    } else {
-      return NextResponse.json(
-        {
-          success: false,
-          error:
-            "Invalid user_id format. Must be UUID (Supabase) or did:privy:... (Privy)",
-        },
-        { status: 400 },
+        { error: "Authentication required" },
+        { status: 401 },
       );
     }
 
@@ -59,10 +29,10 @@ export async function DELETE(request: NextRequest) {
     }
 
     let recordId: string;
-    if (provider === "supabase") {
-      recordId = user_id;
+    if (auth.authProvider === "supabase") {
+      recordId = auth.userId;
     } else {
-      recordId = uuidv5(user_id, namespace);
+      recordId = uuidv5(auth.userId, namespace);
     }
 
     // Delete from nilDB collections
@@ -88,7 +58,7 @@ export async function DELETE(request: NextRequest) {
     // Delete chats (using creator field with original user_id)
     try {
       await deleteRecord(builder, process.env.CHATS_COLLECTION_ID, {
-        creator: user_id,
+        creator: auth.userId,
       });
       deletionResults.chats.deleted = true;
     } catch (error) {
@@ -100,7 +70,7 @@ export async function DELETE(request: NextRequest) {
     // Delete messages (using creator field with original user_id)
     try {
       await deleteRecord(builder, process.env.MESSAGES_COLLECTION_ID, {
-        creator: user_id,
+        creator: auth.userId,
       });
       deletionResults.messages.deleted = true;
     } catch (error) {
@@ -110,7 +80,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Delete from Supabase
-    if (provider === "supabase") {
+    if (auth.authProvider === "supabase") {
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -132,7 +102,7 @@ export async function DELETE(request: NextRequest) {
         },
       });
 
-      const { error } = await supabaseAdmin.auth.admin.deleteUser(user_id);
+      const { error } = await supabaseAdmin.auth.admin.deleteUser(auth.userId);
 
       if (error) {
         console.error("Supabase delete user error:", error);
@@ -155,7 +125,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Delete from Privy
-    if (provider === "privy") {
+    if (auth.authProvider === "privy") {
       const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
       const privyAppSecret = process.env.PRIVY_APP_SECRET;
 
@@ -177,7 +147,7 @@ export async function DELETE(request: NextRequest) {
 
       try {
         const response = await fetch(
-          `https://api.privy.io/v1/users/${user_id}`,
+          `https://api.privy.io/v1/users/${auth.userId}`,
           {
             method: "DELETE",
             headers: {
