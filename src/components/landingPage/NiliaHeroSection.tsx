@@ -2,9 +2,19 @@
 
 import Image from "next/image";
 import SparkleButton from "@/components/ui/SparkleButton";
-import { getThemeNavigationHandler } from "@/utils/themeNavigation";
+import { navigateWithTheme } from "@/utils/themeNavigation";
 
 export default function NiliaHeroSection() {
+  const onGoToYourSafeSpaceClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.ttq?.track("ClickButton", {
+      content_name: "Go To Your Safe Space",
+    });
+    setTimeout(() => {
+      navigateWithTheme("/app", "dark");
+    }, 500);
+  };
+
   return (
     <section className="relative w-full flex flex-col items-center px-4 pt-28 pb-32 md:pt-40 md:pb-48 overflow-hidden">
       {/* Background Gradient */}
@@ -42,9 +52,9 @@ export default function NiliaHeroSection() {
       <SparkleButton
         text="Go To Your Safe Space"
         href="/app"
-        onClick={getThemeNavigationHandler("/app", "dark")}
-        dataUmamiEvent="Let's Chat Clicked - Nilia"
-        className="mb-12 md:mb-16 plausible-event-name=Let's+Chat+Clicked+-+Nilia"
+        onClick={onGoToYourSafeSpaceClick}
+        dataUmamiEvent="Go To Your Safe Space Clicked - Nilia"
+        className="mb-12 md:mb-16 plausible-event-name=Go+To+Your+Safe+Space+Clicked+-+Nilia"
       />
 
       {/* Chat Preview Mockup */}

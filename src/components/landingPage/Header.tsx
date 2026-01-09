@@ -1,13 +1,25 @@
 "use client";
 
 import Image from "next/image";
-import { getThemeNavigationHandler } from "@/utils/themeNavigation";
+import { navigateWithTheme } from "@/utils/themeNavigation";
 
 interface HeaderProps {
   targetTheme?: "light" | "dark";
 }
 
 const Header = ({ targetTheme = "light" }: HeaderProps) => {
+  const onGoToAppClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (targetTheme === "dark") {
+      window.ttq?.track("ClickButton", {
+        content_name: "Go to app",
+      });
+    }
+    setTimeout(() => {
+      navigateWithTheme("/app", targetTheme);
+    }, 500);
+  };
+
   return (
     <header className="absolute top-4 left-4 right-4 z-50">
       <div
@@ -63,7 +75,7 @@ const Header = ({ targetTheme = "light" }: HeaderProps) => {
 
           <a
             href="/app"
-            onClick={getThemeNavigationHandler("/app", targetTheme)}
+            onClick={onGoToAppClick}
             data-umami-event={
               targetTheme === "dark"
                 ? "Go To App Clicked - Nilia"
