@@ -10,10 +10,8 @@ export async function writeRecord(
   }
 
   await builder.createStandardData({
-    body: {
-      collection: collectionId,
-      data: [data as Record<string, unknown>],
-    },
+    collection: collectionId,
+    data: [data as Record<string, unknown>],
   });
 
   return {

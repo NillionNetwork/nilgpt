@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const updateData: Partial<CHAT_SCHEMA> = {
       creator: auth.userId as string,
       updated_at: new Date().toISOString(),
-      message_count,
+      ...(message_count !== undefined && { message_count }),
     };
 
     if (!noTitle && title !== undefined) {
