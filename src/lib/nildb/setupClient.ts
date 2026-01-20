@@ -1,8 +1,8 @@
-import { Keypair } from "@nillion/nuc";
+import { NilauthClient } from "@nillion/nilauth-client";
+import { Signer } from "@nillion/nuc";
 import { SecretVaultBuilderClient } from "@nillion/secretvaults";
 
 const config = {
-  NILCHAIN_URL: process.env.NILCHAIN_URL,
   NILAUTH_URL: process.env.NILAUTH_URL,
   NILDB_NODES: process.env.NILDB_NODES?.split(","),
   NILLION_API_KEY: process.env.NILLION_API_KEY,
@@ -25,22 +25,24 @@ export async function initializeClient(): Promise<void> {
     process.exit(1);
   }
 
-  const builderKeypair = Keypair.from(config.NILLION_API_KEY);
+  const signer = Signer.fromPrivateKey(config.NILLION_API_KEY);
 
-  if (!config.NILCHAIN_URL || !config.NILAUTH_URL || !config.NILDB_NODES) {
-    console.error(
-      "Please set NILCHAIN_URL, NILAUTH_URL, and NILDB_NODES in your .env file",
-    );
+  if (!config.NILAUTH_URL || !config.NILDB_NODES) {
+    console.error("Please set NILAUTH_URL, and NILDB_NODES in your .env file");
     process.exit(1);
   }
 
+  const isTestnet = config.NILAUTH_URL.includes("staging");
+
+  const nilauthClient = await NilauthClient.create({
+    baseUrl: config.NILAUTH_URL,
+    chainId: isTestnet ? 11155111 : 1,
+  });
+
   globalClient = await SecretVaultBuilderClient.from({
-    keypair: builderKeypair,
-    urls: {
-      chain: config.NILCHAIN_URL,
-      auth: config.NILAUTH_URL,
-      dbs: config.NILDB_NODES,
-    },
+    signer,
+    dbs: config.NILDB_NODES,
+    nilauthClient,
     blindfold: {
       operation: "store",
     },
