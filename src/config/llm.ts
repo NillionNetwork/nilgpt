@@ -15,14 +15,6 @@ export const LLM = {
     infoLink: "https://huggingface.co/openai/gpt-oss-20b",
     nilAIInstance: process.env.NILAI_API2_URL,
   },
-  llama: {
-    class: "llama",
-    model: "meta-llama/Llama-3.1-8B-Instruct",
-    temperature: 0.2,
-    maxTokens: 1100,
-    infoLink: "https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct",
-    nilAIInstance: process.env.NILAI_API2_URL,
-  },
 } as const;
 
 export const DEFAULT_MODEL_CONFIG = LLM.gpt;
