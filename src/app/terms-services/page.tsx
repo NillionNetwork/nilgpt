@@ -135,9 +135,6 @@ export default function TermsOfService() {
                     {LLM.gemma.model}: {LLM.gemma.infoLink}
                   </li>
                   <li>
-                    {LLM.llama.model}: {LLM.llama.infoLink}
-                  </li>
-                  <li>
                     {LLM.gpt.model}: {LLM.gpt.infoLink}
                   </li>
                 </ol>
