@@ -1,6 +1,6 @@
 {
   "name": "nil-gpt",
-  "version": "0.5.12",
+  "version": "0.5.13",
   "private": true,
   "scripts": {
     "dev": "next dev",
