@@ -10,6 +10,8 @@ const config = {
 
 // Global client instance - created once at startup
 let globalClient: SecretVaultBuilderClient | null = null;
+// Alternate client without blindfold for non-secret data
+let globalClientNoBlindfold: SecretVaultBuilderClient | null = null;
 
 /**
  * Initialize the global nildb client once at startup
@@ -49,7 +51,15 @@ export async function initializeClient(): Promise<void> {
   });
 
   await globalClient.refreshRootToken();
-  console.log("nildb client initialized successfully");
+
+  // Initialize alternate client without blindfold
+  globalClientNoBlindfold = await SecretVaultBuilderClient.from({
+    signer,
+    dbs: config.NILDB_NODES,
+    nilauthClient,
+  });
+
+  await globalClientNoBlindfold.refreshRootToken();
 }
 
 /**
@@ -70,4 +80,24 @@ export async function setupClient(): Promise<SecretVaultBuilderClient> {
   await globalClient.refreshRootToken();
 
   return globalClient;
+}
+
+/**
+ * Get the client without blindfold and refresh the token
+ * This should be called for operations that don't involve secrets
+ */
+export async function setupClientNoBlindfold(): Promise<SecretVaultBuilderClient> {
+  // Ensure client is initialized (will initialize on first call if needed)
+  if (!globalClientNoBlindfold) {
+    await initializeClient();
+  }
+
+  if (!globalClientNoBlindfold) {
+    throw new Error("Failed to initialize nildb client (no blindfold)");
+  }
+
+  // Refresh the token before each operation (tokens expire in 1 minute)
+  await globalClientNoBlindfold.refreshRootToken();
+
+  return globalClientNoBlindfold;
 }
