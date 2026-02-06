@@ -159,7 +159,7 @@ const ChatInput: React.FC<IChatInputProps> = ({
     if (!input.trim() || isLoading || !isAuthenticated || isOverLimit) return;
 
     if (theme === "dark") {
-      //@ts-ignore
+      //@ts-expect-error
       window.plausible?.("Message Sent - Nilia");
     }
 

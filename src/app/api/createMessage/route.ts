@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       timestamp: timestamp,
       model: model,
       signature: "",
-      pwa,
+      ...(pwa === true && { pwa: true }),
       ...(attachments?.length > 0 && { attachments }),
       ...(sources?.length > 0 && { sources }),
       ...(web_search === true && { web_search: true }),
