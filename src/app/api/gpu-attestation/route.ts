@@ -8,11 +8,9 @@ interface GpuAttestationData {
 export async function GET(_request: NextRequest) {
   try {
     // Get nilAI instances from the LLM config
-    const instances = [
-      LLM.gemma.nilAIInstance,
-      LLM.gpt.nilAIInstance,
-      LLM.llama.nilAIInstance,
-    ].filter(Boolean);
+    const instances = [LLM.gemma.nilAIInstance, LLM.gpt.nilAIInstance].filter(
+      Boolean,
+    );
 
     if (instances.length === 0) {
       return NextResponse.json(
