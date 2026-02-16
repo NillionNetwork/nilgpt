@@ -13,7 +13,7 @@ export const LLM = {
     temperature: 0.95,
     maxTokens: 10000,
     infoLink: "https://huggingface.co/openai/gpt-oss-20b",
-    nilAIInstance: process.env.NILAI_API2_URL,
+    nilAIInstance: process.env.NILAI_API_URL,
   },
 } as const;
 
