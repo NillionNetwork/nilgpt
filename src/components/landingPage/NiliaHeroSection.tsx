@@ -54,7 +54,7 @@ export default function NiliaHeroSection() {
         href="/app"
         onClick={onGoToYourSafeSpaceClick}
         dataUmamiEvent="Go To Your Safe Space Clicked - Nilia"
-        className="mb-12 md:mb-16 plausible-event-name=Go+To+Your+Safe+Space+Clicked+-+Nilia"
+        className="mb-12 md:mb-16"
       />
 
       {/* Chat Preview Mockup */}
