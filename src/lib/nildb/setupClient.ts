@@ -2,7 +2,6 @@ import { Signer } from "@nillion/nuc";
 import { SecretVaultBuilderClient } from "@nillion/secretvaults";
 
 const config = {
-  NILAUTH_URL: process.env.NILAUTH_URL,
   NILDB_NODES: process.env.NILDB_NODES?.split(","),
   NILLION_API_KEY: process.env.NILLION_API_KEY,
 };
