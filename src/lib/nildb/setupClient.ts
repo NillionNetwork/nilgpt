@@ -1,4 +1,3 @@
-import { NilauthClient } from "@nillion/nilauth-client";
 import { Signer } from "@nillion/nuc";
 import { SecretVaultBuilderClient } from "@nillion/secretvaults";
 
@@ -29,37 +28,24 @@ export async function initializeClient(): Promise<void> {
 
   const signer = Signer.fromPrivateKey(config.NILLION_API_KEY);
 
-  if (!config.NILAUTH_URL || !config.NILDB_NODES) {
-    console.error("Please set NILAUTH_URL, and NILDB_NODES in your .env file");
+  if (!config.NILDB_NODES) {
+    console.error("Please set NILDB_NODES in your .env file");
     process.exit(1);
   }
-
-  const isTestnet = config.NILAUTH_URL.includes("staging");
-
-  const nilauthClient = await NilauthClient.create({
-    baseUrl: config.NILAUTH_URL,
-    chainId: isTestnet ? 11155111 : 1,
-  });
 
   globalClient = await SecretVaultBuilderClient.from({
     signer,
     dbs: config.NILDB_NODES,
-    nilauthClient,
     blindfold: {
       operation: "store",
     },
   });
 
-  await globalClient.refreshRootToken();
-
   // Initialize alternate client without blindfold
   globalClientNoBlindfold = await SecretVaultBuilderClient.from({
     signer,
     dbs: config.NILDB_NODES,
-    nilauthClient,
   });
-
-  await globalClientNoBlindfold.refreshRootToken();
 }
 
 /**
@@ -75,9 +61,6 @@ export async function setupClient(): Promise<SecretVaultBuilderClient> {
   if (!globalClient) {
     throw new Error("Failed to initialize nildb client");
   }
-
-  // Refresh the token before each operation (tokens expire in 1 minute)
-  await globalClient.refreshRootToken();
 
   return globalClient;
 }
@@ -95,9 +78,6 @@ export async function setupClientNoBlindfold(): Promise<SecretVaultBuilderClient
   if (!globalClientNoBlindfold) {
     throw new Error("Failed to initialize nildb client (no blindfold)");
   }
-
-  // Refresh the token before each operation (tokens expire in 1 minute)
-  await globalClientNoBlindfold.refreshRootToken();
 
   return globalClientNoBlindfold;
 }
