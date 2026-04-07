@@ -1,10 +1,10 @@
 export const LLM = {
   gemma: {
     class: "gemma",
-    model: "google/gemma-3-27b-it",
+    model: "google/gemma-4-26B-A4B-it",
     temperature: 0.2,
     maxTokens: 10000,
-    infoLink: "https://huggingface.co/google/gemma-3-27b-it",
+    infoLink: "https://huggingface.co/google/gemma-4-26B-A4B-it",
     nilAIInstance: process.env.NILAI_API_URL,
   },
   gpt: {
