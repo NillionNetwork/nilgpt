@@ -44,7 +44,7 @@ const FAQSection = () => {
     {
       question: "What AI models are used in nilGPT?",
       answer:
-        "Currently the gpt-oss-20b and gemma-4-26B-A4B-it models are used in nilGPT, however we are continuously evaluating which models provide the best accuracy and latency.",
+        "Currently the google/gemma-4-26B-A4B-it model is used in nilGPT, however we are continuously evaluating which models provide the best accuracy and latency.",
     },
     {
       question: "Is my data used to train the models?",
