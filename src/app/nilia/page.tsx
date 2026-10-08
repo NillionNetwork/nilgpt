@@ -5,6 +5,7 @@ import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import Footer from "@/components/landingPage/Footer";
 import Header from "@/components/landingPage/Header";
+import NilDBSunsetBanner from "@/components/landingPage/NilDBSunsetBanner";
 import NiliaFAQSection from "@/components/landingPage/NiliaFAQSection";
 import NiliaFeaturesSection from "@/components/landingPage/NiliaFeaturesSection";
 import NiliaHeroSection from "@/components/landingPage/NiliaHeroSection";
@@ -30,25 +31,27 @@ export default function Nilia() {
   }, []);
 
   return (
-    <main className="relative">
-      <Header targetTheme="dark" />
-      <NiliaHeroSection />
-      <NiliaTestimonialSection />
-      <NiliaFeaturesSection />
-      <section
-        style={{
-          backgroundImage:
-            "linear-gradient(to bottom, #1b1b1b 0%, #1b1b1b 40%, transparent 60%), url('/img/footer_gradient.webp')",
-          backgroundSize: "100% 100%, 100% 100%",
-          backgroundPosition: "top, bottom center",
-          backgroundRepeat: "no-repeat, no-repeat",
-        }}
-      >
-        <NiliaFAQSection />
-        <Footer />
-      </section>
-      <Script>
-        {`!(function (w, d, t) {
+    <>
+      <NilDBSunsetBanner />
+      <main className="relative">
+        <Header targetTheme="dark" />
+        <NiliaHeroSection />
+        <NiliaTestimonialSection />
+        <NiliaFeaturesSection />
+        <section
+          style={{
+            backgroundImage:
+              "linear-gradient(to bottom, #1b1b1b 0%, #1b1b1b 40%, transparent 60%), url('/img/footer_gradient.webp')",
+            backgroundSize: "100% 100%, 100% 100%",
+            backgroundPosition: "top, bottom center",
+            backgroundRepeat: "no-repeat, no-repeat",
+          }}
+        >
+          <NiliaFAQSection />
+          <Footer />
+        </section>
+        <Script>
+          {`!(function (w, d, t) {
             w.TiktokAnalyticsObject = t;
             var ttq = (w[t] = w[t] || []);
             (ttq.methods = [
@@ -102,7 +105,8 @@ export default function Nilia() {
             ttq.load("D59EDQ3C77U4D2G7UUPG");
             ttq.page();
           })(window, document, "ttq");`}
-      </Script>
-    </main>
+        </Script>
+      </main>
+    </>
   );
 }

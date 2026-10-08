@@ -2,11 +2,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import { DEFAULT_MODEL, getModelConfig, type TLLMName } from "@/config/llm";
 import { getPersonaPrompt } from "@/config/personas";
 import { requireAuth } from "@/lib/auth/unifiedAuth";
-import { setupClient } from "@/lib/nildb/setupClient";
 import {
-  checkWebSearchRateLimit,
-  incrementWebSearchCounterFromData,
-  resetWebSearchCounter,
+  consumeWebSearch,
   WEB_SEARCH_DAILY_LIMIT,
 } from "@/lib/rateLimiting/webSearchRateLimit";
 
@@ -57,39 +54,9 @@ export async function POST(req: Request) {
       try {
         const auth = await requireAuth(req as NextRequest);
         if (auth.isAuthenticated && auth.userId) {
-          const builder = await setupClient();
-
-          // Check rate limit
-          const userCollectionId = process.env.USER_COLLECTION_ID;
-          if (!userCollectionId) {
-            throw new Error(
-              "USER_COLLECTION_ID environment variable is not set",
-            );
-          }
-
-          const rateLimitCheck = await checkWebSearchRateLimit(
-            builder,
-            auth.userId,
-            userCollectionId,
-          );
-
-          // Reset counter if date has passed
-          if (rateLimitCheck.needsReset) {
-            await resetWebSearchCounter(builder, auth.userId, userCollectionId);
-          }
-
-          // Check if rate limit is reached
-          if (rateLimitCheck.isRateLimited) {
+          if (!consumeWebSearch(auth.userId)) {
             actualWebSearch = false;
             rateLimitReached = true;
-          } else {
-            // Increment counter using the already fetched data
-            await incrementWebSearchCounterFromData(
-              builder,
-              auth.userId,
-              userCollectionId,
-              rateLimitCheck.webSearchData,
-            );
           }
         } else {
           // If not authenticated, disable web search

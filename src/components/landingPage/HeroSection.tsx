@@ -12,16 +12,21 @@ const HeroSection = () => {
     const fetchMessageCount = async () => {
       try {
         const response = await fetch("/api/message-count");
-        const data = await response.json();
 
+        // nilDB isn't responding: show the fallback and stop polling
+        if (response.status === 503) {
+          setMessageCount(null);
+          clearInterval(interval);
+          return;
+        }
+
+        const data = await response.json();
         if (data.success) {
           setMessageCount(data.count);
-        } else {
-          setMessageCount(null);
         }
       } catch (error) {
+        // Transient failure: keep the last count and retry on the next poll
         console.error("Failed to fetch message count:", error);
-        setMessageCount(null);
       } finally {
         setIsLoading(false);
       }

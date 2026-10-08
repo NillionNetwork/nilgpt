@@ -9,37 +9,14 @@ const FAQSection = () => {
     {
       question:
         "Where does my chat history get stored and can anyone see my chat history?",
-      answer: (
-        <>
-          No. Your chats are stored in nilDB, a decentralised set of nodes, run
-          by distinct entities, where data can be secret-shared and stored under
-          Multi-Party Computation (MPC). The MPC storage ensures that no single
-          node can reconstruct the data; each only holds a meaningless share of
-          the conversation. Even if multiple nodes are compromised, the
-          cryptographic properties ensure data remains protected. If one (or
-          more) nodes are fully exposed, no user conversations are made public.
-          A user’s chats are only ever reconstructed when the user is logged
-          into the app.
-          <br />
-          <br />
-          You can read more about the architecture of nilDB{" "}
-          <a
-            href="https://x.com/davtbutler/status/1950546294574825755"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 underline"
-          >
-            here
-          </a>
-          .
-        </>
-      ),
+      answer:
+        "No. Your chats are stored only on your device, in your browser, and are encrypted with your passphrase before they are saved. Your passphrase never leaves your device, so nobody else, including Nillion, can read your chat history. Because chats live on your device, they don't sync between devices or browsers, and clearing your browser's site data deletes them.",
     },
     {
       question:
         "What’s the difference between nilGPT and other private AI providers?",
       answer:
-        "nilGPT offers provable privacy, not just promises. Many other providers rely on trust-based policies or opaque encryption claims, nilGPT runs inference inside a Trusted Execution Environment (TEE) using nilAI and stores chats in nilDB, a decentralised MPC-secured database.",
+        "nilGPT offers provable privacy, not just promises. Many other providers rely on trust-based policies or opaque encryption claims, nilGPT runs inference inside a Trusted Execution Environment (TEE) using nilAI, and your chats are encrypted with your passphrase and stored only on your device.",
     },
     {
       question: "What AI models are used in nilGPT?",
@@ -49,7 +26,7 @@ const FAQSection = () => {
     {
       question: "Is my data used to train the models?",
       answer:
-        "No. Your data is not used to train nilGPT’s models. Your data is only visible to you in the frontend of the app and is always stored under MPC across nilDB nodes.",
+        "No. Your data is not used to train nilGPT’s models. Your data is only visible to you in the app, and your chats are stored encrypted on your device.",
     },
     {
       question: "Can the AI model see the questions I ask?",

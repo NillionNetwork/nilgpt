@@ -5,6 +5,103 @@ import { v5 as uuidv5 } from "uuid";
 import { requireAuth } from "@/lib/auth/unifiedAuth";
 import { deleteRecord } from "@/lib/nildb/deleteRecord";
 import { setupClient } from "@/lib/nildb/setupClient";
+import { isNilDBAvailable } from "@/lib/nildb/status";
+
+type TDeletionResults = Record<
+  "user" | "chats" | "messages",
+  { deleted: boolean; error: string | null }
+>;
+
+/**
+ * Best-effort removal of the user's nilDB records. Never throws, so the
+ * auth provider account is still deleted when nilDB is unavailable.
+ */
+async function deleteNilDBRecords(
+  userId: string,
+  authProvider: "supabase" | "privy",
+): Promise<TDeletionResults> {
+  const deletionResults: TDeletionResults = {
+    user: { deleted: false, error: null },
+    chats: { deleted: false, error: null },
+    messages: { deleted: false, error: null },
+  };
+
+  if (!(await isNilDBAvailable())) {
+    const error = "nilDB unavailable";
+    deletionResults.user.error = error;
+    deletionResults.chats.error = error;
+    deletionResults.messages.error = error;
+    return deletionResults;
+  }
+
+  // Calculate recordId for nilDB user collection (same logic as createUser)
+  const namespace = process.env.SALT;
+  const recordId =
+    authProvider === "supabase"
+      ? userId
+      : namespace
+        ? uuidv5(userId, namespace)
+        : null;
+
+  let builder: Awaited<ReturnType<typeof setupClient>>;
+  try {
+    builder = await setupClient();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("Error connecting to nilDB:", error);
+    deletionResults.user.error = message;
+    deletionResults.chats.error = message;
+    deletionResults.messages.error = message;
+    return deletionResults;
+  }
+
+  // Delete user record
+  if (recordId) {
+    try {
+      await deleteRecord(builder, process.env.USER_COLLECTION_ID, {
+        _id: recordId,
+      });
+      deletionResults.user.deleted = true;
+    } catch (error) {
+      deletionResults.user.error =
+        error instanceof Error ? error.message : "Unknown error";
+      console.error("Error deleting user from nilDB:", error);
+    }
+  } else {
+    deletionResults.user.error = "SALT environment variable is not set";
+  }
+
+  // Delete chats (using creator field with original user_id)
+  try {
+    await deleteRecord(builder, process.env.CHATS_COLLECTION_ID, {
+      creator: userId,
+    });
+    deletionResults.chats.deleted = true;
+  } catch (error) {
+    deletionResults.chats.error =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("Error deleting chats from nilDB:", error);
+  }
+
+  // Delete messages (using creator field with original user_id)
+  try {
+    await deleteRecord(builder, process.env.MESSAGES_COLLECTION_ID, {
+      creator: userId,
+    });
+    deletionResults.messages.deleted = true;
+  } catch (error) {
+    deletionResults.messages.error =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("Error deleting messages from nilDB:", error);
+  }
+
+  return deletionResults;
+}
+
+const describeNilDBResults = (results: TDeletionResults) =>
+  Object.values(results).every((result) => result.deleted)
+    ? "and nilDB"
+    : "(nilDB records could not all be deleted)";
 
 export async function DELETE(request: NextRequest) {
   try {
@@ -16,68 +113,10 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Calculate recordId for nilDB user collection (same logic as createUser)
-    const namespace = process.env.SALT;
-    if (!namespace) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "SALT environment variable is not set",
-        },
-        { status: 500 },
-      );
-    }
-
-    let recordId: string;
-    if (auth.authProvider === "supabase") {
-      recordId = auth.userId;
-    } else {
-      recordId = uuidv5(auth.userId, namespace);
-    }
-
-    // Delete from nilDB collections
-    const builder = await setupClient();
-    const deletionResults = {
-      user: { deleted: false, error: null as string | null },
-      chats: { deleted: false, error: null as string | null },
-      messages: { deleted: false, error: null as string | null },
-    };
-
-    // Delete user record
-    try {
-      await deleteRecord(builder, process.env.USER_COLLECTION_ID, {
-        _id: recordId,
-      });
-      deletionResults.user.deleted = true;
-    } catch (error) {
-      deletionResults.user.error =
-        error instanceof Error ? error.message : "Unknown error";
-      console.error("Error deleting user from nilDB:", error);
-    }
-
-    // Delete chats (using creator field with original user_id)
-    try {
-      await deleteRecord(builder, process.env.CHATS_COLLECTION_ID, {
-        creator: auth.userId,
-      });
-      deletionResults.chats.deleted = true;
-    } catch (error) {
-      deletionResults.chats.error =
-        error instanceof Error ? error.message : "Unknown error";
-      console.error("Error deleting chats from nilDB:", error);
-    }
-
-    // Delete messages (using creator field with original user_id)
-    try {
-      await deleteRecord(builder, process.env.MESSAGES_COLLECTION_ID, {
-        creator: auth.userId,
-      });
-      deletionResults.messages.deleted = true;
-    } catch (error) {
-      deletionResults.messages.error =
-        error instanceof Error ? error.message : "Unknown error";
-      console.error("Error deleting messages from nilDB:", error);
-    }
+    const deletionResults = await deleteNilDBRecords(
+      auth.userId,
+      auth.authProvider,
+    );
 
     // Delete from Supabase
     if (auth.authProvider === "supabase") {
@@ -118,7 +157,7 @@ export async function DELETE(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: "User deleted from Supabase and nilDB successfully",
+        message: `User deleted from Supabase ${describeNilDBResults(deletionResults)}`,
         provider: "supabase",
         nilDBResults: deletionResults,
       });
@@ -172,7 +211,7 @@ export async function DELETE(request: NextRequest) {
 
         return NextResponse.json({
           success: true,
-          message: "User deleted from Privy and nilDB successfully",
+          message: `User deleted from Privy ${describeNilDBResults(deletionResults)}`,
           provider: "privy",
           nilDBResults: deletionResults,
         });

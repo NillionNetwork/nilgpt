@@ -4,6 +4,7 @@ import { Download } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect } from "react";
 import Footer from "@/components/landingPage/Footer";
+import NilDBSunsetBanner from "@/components/landingPage/NilDBSunsetBanner";
 import PWAInstallInstructionsModal from "@/components/PWAInstallInstructionsModal";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
@@ -37,31 +38,34 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative">
-      <Header />
-      <HeroSection />
-      <TestimonialSection />
-      <FeaturesSection />
-      <FAQSection />
-      <Footer />
-      {shouldShowPWAInstallInstructionsModal && (
-        <Dialog
-          open={isPWAInstallInstructionsModalOpen}
-          onOpenChange={setIsPWAInstallInstructionsModalOpen}
-        >
-          <DialogTrigger asChild>
-            <Button
-              variant="default"
-              size="sm"
-              className="bg-[#FFC971] rounded-full gap-2 px-4 my-4 hover:bg-[#FFC971]/90 fixed bottom-4 right-4"
-            >
-              <Download className="text-black" size={16} />
-              <span className="text-sm text-black">Install nilGPT</span>
-            </Button>
-          </DialogTrigger>
-          <PWAInstallInstructionsModal />
-        </Dialog>
-      )}
-    </main>
+    <>
+      <NilDBSunsetBanner />
+      <main className="relative">
+        <Header />
+        <HeroSection />
+        <TestimonialSection />
+        <FeaturesSection />
+        <FAQSection />
+        <Footer />
+        {shouldShowPWAInstallInstructionsModal && (
+          <Dialog
+            open={isPWAInstallInstructionsModalOpen}
+            onOpenChange={setIsPWAInstallInstructionsModalOpen}
+          >
+            <DialogTrigger asChild>
+              <Button
+                variant="default"
+                size="sm"
+                className="bg-[#FFC971] rounded-full gap-2 px-4 my-4 hover:bg-[#FFC971]/90 fixed bottom-4 right-4"
+              >
+                <Download className="text-black" size={16} />
+                <span className="text-sm text-black">Install nilGPT</span>
+              </Button>
+            </DialogTrigger>
+            <PWAInstallInstructionsModal />
+          </Dialog>
+        )}
+      </main>
+    </>
   );
 }
