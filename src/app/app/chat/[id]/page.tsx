@@ -7,10 +7,16 @@ import StreamingChatArea from "@/components/chat/StreamingChatArea";
 import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/contexts/UnifiedAuthProvider";
 import { useEncryption } from "@/hooks/useEncryption";
+import { ChatStore } from "@/services/ChatStore";
 
 export default function ChatPage() {
   const { id: chatId } = useParams<{ id: string }>();
-  const { selectedPersona, userSecretKeySeed, setUserSecretKeySeed } = useApp();
+  const {
+    selectedPersona,
+    userSecretKeySeed,
+    setUserSecretKeySeed,
+    isChatStorageReady,
+  } = useApp();
 
   // biome-ignore lint/suspicious/noExplicitAny: TODO: add type
   const [messages, setMessages] = useState<any[]>([]);
@@ -43,26 +49,16 @@ export default function ChatPage() {
   }, [userSecretKeySeed]);
 
   useEffect(() => {
-    const fetchChatMessages = async (chatId: string) => {
+    const fetchChatMessages = async (userId: string, chatId: string) => {
       setLoading(true);
       try {
-        const headers: Record<string, string> = {
-          "Content-Type": "application/json",
-        };
-
-        const response = await fetch(`/api/getChatMessages/${chatId}`, {
-          method: "GET",
-          headers,
-        });
-        const data = await response.json();
-        const fetchedMessages = data.content || [];
+        const fetchedMessages = await ChatStore.getMessages(userId, chatId);
 
         // Decrypt messages if user has secret key
         if (hasSecretKey && fetchedMessages.length > 0) {
           let failedDecryptions = 0;
           const decryptedMessages = await Promise.all(
-            // biome-ignore lint/suspicious/noExplicitAny: TODO: add type
-            fetchedMessages.map(async (message: any) => {
+            fetchedMessages.map(async (message) => {
               const result = await decryptWithStatus(message.content);
               if (!result.decryptComplete) {
                 failedDecryptions++;
@@ -88,8 +84,8 @@ export default function ChatPage() {
         setLoading(false);
       }
     };
-    if (user && passphraseLoaded) {
-      fetchChatMessages(chatId);
+    if (user && passphraseLoaded && isChatStorageReady) {
+      fetchChatMessages(user.id, chatId);
     } else if (!user) {
       setLoading(false);
       setMessages([]);
@@ -102,6 +98,7 @@ export default function ChatPage() {
     decryptWithStatus,
     hasSecretKey,
     passphraseLoaded,
+    isChatStorageReady,
   ]);
 
   // Show loading if fetching messages or waiting for passphrase to load

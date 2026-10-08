@@ -4,6 +4,7 @@ import { v5 as uuidv5 } from "uuid";
 import { requireAuth } from "@/lib/auth/unifiedAuth";
 import { getRecord } from "@/lib/nildb/getRecord";
 import { setupClient } from "@/lib/nildb/setupClient";
+import { isNilDBAvailable } from "@/lib/nildb/status";
 import { writeRecord } from "@/lib/nildb/writeRecord";
 import type { USER_SCHEMA } from "@/types/schemas";
 
@@ -16,6 +17,17 @@ export async function POST(request: NextRequest) {
         { error: "Authentication required" },
         { status: 401 },
       );
+    }
+
+    // The nilDB user record is optional: login works without it
+    if (!(await isNilDBAvailable())) {
+      return NextResponse.json({
+        success: true,
+        message: "nilDB unavailable, skipped user record",
+        provider: auth.authProvider,
+        userExists: false,
+        skipped: true,
+      });
     }
 
     const namespace = process.env.SALT;

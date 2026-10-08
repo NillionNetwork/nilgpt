@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 import { TbRefresh } from "react-icons/tb";
+import { v4 as uuidv4 } from "uuid";
 import { DEFAULT_MODEL } from "@/config/llm";
 import { getPersonaById } from "@/config/personas";
 import { useApp } from "@/contexts/AppContext";
@@ -12,6 +13,7 @@ import { useAuth } from "@/contexts/UnifiedAuthProvider";
 import { useEncryption } from "@/hooks/useEncryption";
 import useIsPWA from "@/hooks/useIsPWA";
 import { useStreamingChat } from "@/hooks/useStreamingChat";
+import { ChatStore } from "@/services/ChatStore";
 import { LocalStorageService } from "@/services/LocalStorage";
 import type { IChatMessage, IWebSearchSource } from "@/types/chat";
 import type { TMessageAttachment } from "@/types/schemas";
@@ -69,29 +71,18 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
 
     // 2. Create Chat with title "null"
     try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-
-      const response = await fetch("/api/createChat", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          _id: chatId,
-          title: "null",
-          message_count: 2,
-          persona: selectedPersona,
-        }),
+      const currentTime = new Date().toISOString();
+      await ChatStore.createChat({
+        _id: chatId,
+        creator: user.id,
+        title: "null",
+        created_at: currentTime,
+        updated_at: currentTime,
+        message_count: 2,
+        persona: selectedPersona,
       });
-
-      const result = await response.json();
-      if (response.ok) {
-        return result;
-      } else {
-        console.error("Error creating CHATS:", result.error);
-      }
     } catch (error) {
-      console.error("Network error creating chat:", error);
+      console.error("Error creating chat:", error);
     }
   };
 
@@ -144,30 +135,14 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
       }
     }
 
-    // 4. Store in database
+    // 4. Store locally
     try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-
-      const response = await fetch("/api/updateChat", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          _id: chatId,
-          title: encryptedTitle,
-          message_count: 2,
-        }),
+      await ChatStore.updateChat(chatId, {
+        title: encryptedTitle ?? "New Chat",
+        message_count: 2,
       });
-
-      const result = await response.json();
-      if (response.ok) {
-        return result;
-      } else {
-        console.error("Error updating chat title:", result.error);
-      }
     } catch (error) {
-      console.error("Network error updating chat title:", error);
+      console.error("Error updating chat title:", error);
     }
   };
 
@@ -178,30 +153,11 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
       return;
     }
 
-    // 3. Update Chat via DB
+    // 3. Update Chat locally
     try {
-      const headers: Record<string, string> = {
-        "Content-Type": "application/json",
-      };
-
-      const response = await fetch("/api/updateChat", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({
-          _id: chatId,
-          message_count: messageCount,
-          noTitle: true,
-        }),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        return result;
-      } else {
-        console.error("Error creating CHATS:", result.error);
-      }
+      await ChatStore.updateChat(chatId, { message_count: messageCount });
     } catch (error) {
-      console.error("Network error:", error);
+      console.error("Error updating chat count:", error);
     }
   };
 
@@ -229,40 +185,28 @@ const StreamingChatArea: React.FC<StreamingChatAreaProps> = ({
         try {
           blindfoldContent = await encrypt(content);
         } catch (error) {
+          // encryptLegacyPlaintext encrypts it on a later visit
           console.warn("Encryption failed, storing as plaintext:", error);
           blindfoldContent = content;
         }
       }
 
-      const response = await fetch("/api/createMessage", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          chat_id: chatId,
-          role: role,
-          content: content,
-          order: order,
-          timestamp: new Date().toISOString(),
-          model: DEFAULT_MODEL,
-          creator: user?.id,
-          blindfoldContent: blindfoldContent,
-          attachments,
-          sources,
-          ...(isPWA && { pwa: true }),
-          ...(web_search === true && { web_search: true }),
-        }),
+      await ChatStore.addMessage({
+        _id: uuidv4(),
+        chat_id: chatId,
+        creator: user.id,
+        role,
+        content: blindfoldContent,
+        order,
+        timestamp: new Date().toISOString(),
+        model: DEFAULT_MODEL,
+        ...(attachments && attachments.length > 0 && { attachments }),
+        ...(sources && sources.length > 0 && { sources }),
+        ...(isPWA && { pwa: true }),
+        ...(web_search === true && { web_search: true }),
       });
-
-      const result = await response.json();
-      if (response.ok) {
-        return result;
-      } else {
-        console.error("Error creating message:", result.error);
-      }
     } catch (error) {
-      console.error("Network error:", error);
+      console.error("Error creating message:", error);
     }
   };
 

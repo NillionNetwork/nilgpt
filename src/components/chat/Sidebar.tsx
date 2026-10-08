@@ -20,6 +20,8 @@ import { useApp } from "@/contexts/AppContext";
 import { useAuth } from "@/contexts/UnifiedAuthProvider";
 import useCreateChat from "@/hooks/useCreateChat";
 import { useEncryption } from "@/hooks/useEncryption";
+import { ChatStore } from "@/services/ChatStore";
+import { clearMigrationFlag } from "@/services/ChatStore/migrateFromNilDB";
 import { LocalStorageService } from "@/services/LocalStorage";
 import type { IChatItem } from "@/types/chat";
 import { getPersonaFromUTM } from "@/utils/utmPersonaMapping";
@@ -46,6 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
     setSelectedPersona,
     setChatHistory,
     chatHistory,
+    isChatStorageReady,
   } = useApp();
   const { theme } = useTheme();
 
@@ -100,120 +103,61 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
   })();
 
   useEffect(() => {
-    const getChats = async () => {
+    const getChats = async (userId: string) => {
       setLoading(true);
       try {
-        const headers: Record<string, string> = {
-          "Content-Type": "application/json",
-        };
+        const storedChats = (await ChatStore.getChats(userId)).filter(
+          (c) => c.title && c.title !== "null" && c.title !== "",
+        );
 
-        const res = await fetch("/api/getChats", {
-          method: "GET",
-          headers,
-        });
-        if (!res.ok) {
-          console.error("Failed to fetch chats:", res.statusText);
-          setChatHistory([]);
-          setLoading(false);
-          return;
+        // Decrypt chat titles with the user's secret key
+        const realChats: IChatItem[] = await Promise.all(
+          storedChats.map(async ({ _id, title, persona }) => {
+            try {
+              return { _id, title: await decrypt(title), persona };
+            } catch (error) {
+              console.error("Error decrypting chat title:", error);
+              return { _id, title, persona };
+            }
+          }),
+        );
+
+        const realIds = new Set<string>(realChats.map((c) => c._id));
+
+        if (!staleChatsRef.current) {
+          LocalStorageService.removeUntitledChatsNotIn(realIds);
+          staleChatsRef.current = true;
         }
-        const data = await res.json();
 
-        setChatHistory((prev) => {
-          const rawChats = (data.content.result || [])
-            .map((chat: IChatItem) => {
-              // Handle case where title might be an object (e.g., { '%allot': 'actual title' })
-              let actualTitle = chat.title;
-              if (typeof chat.title === "object" && chat.title !== null) {
-                if (chat.title["%allot"]) {
-                  actualTitle = chat.title["%allot"];
-                } else {
-                  // Handle other possible object formats
-                  const keys = Object.keys(chat.title);
-                  if (keys.length === 1) {
-                    actualTitle = chat.title[keys[0]];
-                  }
-                }
-              }
+        const localChats = LocalStorageService.getChatHistory();
+        const optimistic = localChats.filter(
+          (c: IChatItem) => !realIds.has(c._id) && c.title === "Untitled Chat",
+        );
 
-              return {
-                ...chat,
-                title: actualTitle,
-              };
-            })
-            .filter(
-              (c: IChatItem) => c.title && c.title !== "null" && c.title !== "",
+        const finalChats = [...optimistic, ...realChats];
+
+        if (!currentChatId) {
+          // Check if there's a UTM-based persona selection first (higher priority)
+          const utmParams = getStoredUTMParameters();
+          const personaFromUTM = getPersonaFromUTM(utmParams);
+
+          if (personaFromUTM) {
+            console.log(
+              `UTM campaign detected, skipping latest chat persona selection`,
             );
-
-          // Decrypt chat titles if user has secret key
-          const processChats = async () => {
-            if (hasSecretKey && rawChats.length > 0) {
-              const decryptedChats = await Promise.all(
-                rawChats.map(async (chat: IChatItem) => {
-                  try {
-                    const decryptedTitle = await decrypt(chat.title);
-                    return {
-                      ...chat,
-                      title: decryptedTitle,
-                    };
-                  } catch (error) {
-                    console.error("Error decrypting chat title:", error);
-                    return chat;
-                  }
-                }),
-              );
-              return decryptedChats;
-            } else {
-              return rawChats;
-            }
-          };
-
-          processChats().then((realChats) => {
-            const realIds = new Set<string>(
-              realChats.map((c: IChatItem) => c._id),
-            );
-
-            if (!staleChatsRef.current) {
-              LocalStorageService.removeUntitledChatsNotIn(realIds);
-              staleChatsRef.current = true;
-            }
-
-            setChatHistory(() => {
-              const localChats = LocalStorageService.getChatHistory();
-              const optimistic = localChats.filter(
-                (c: IChatItem) =>
-                  !realIds.has(c._id) && c.title === "Untitled Chat",
-              );
-
-              const finalChats = [...optimistic, ...realChats];
-
-              if (!currentChatId) {
-                // Check if there's a UTM-based persona selection first (higher priority)
-                const utmParams = getStoredUTMParameters();
-                const personaFromUTM = getPersonaFromUTM(utmParams);
-
-                if (personaFromUTM) {
-                  console.log(
-                    `UTM campaign detected, skipping latest chat persona selection`,
-                  );
-                } else {
-                  // Extract the latest persona from the most recent chat (fallback)
-                  if (finalChats.length > 0) {
-                    const latestChat = finalChats[0]; // First chat is the most recent
-                    if (latestChat.persona) {
-                      // Set the persona in AppContext
-                      setSelectedPersona(latestChat.persona);
-                    }
-                  }
-                }
+          } else {
+            // Extract the latest persona from the most recent chat (fallback)
+            if (finalChats.length > 0) {
+              const latestChat = finalChats[0]; // First chat is the most recent
+              if (latestChat.persona) {
+                // Set the persona in AppContext
+                setSelectedPersona(latestChat.persona);
               }
+            }
+          }
+        }
 
-              return finalChats;
-            });
-          });
-
-          return prev;
-        });
+        setChatHistory(finalChats);
       } catch (error) {
         console.error("Error fetching chats:", error);
         setChatHistory([]);
@@ -222,13 +166,19 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
       }
     };
 
-    if (user && hasSecretKey) {
-      getChats();
-    } else {
+    if (!user || !hasSecretKey) {
       setLoading(false);
       setChatHistory([]);
       return;
     }
+
+    if (!isChatStorageReady) {
+      setLoading(true);
+      return;
+    }
+
+    const userId = user.id;
+    getChats(userId);
 
     const handleSidebarRefresh = () => {
       if (isCreatingChat) {
@@ -237,13 +187,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
 
       LocalStorageService.removeUntitledChats();
 
-      getChats();
+      getChats(userId);
     };
     window.addEventListener("sidebar:refresh", handleSidebarRefresh);
     return () => {
       window.removeEventListener("sidebar:refresh", handleSidebarRefresh);
     };
-  }, [user, hasSecretKey, decrypt, isCreatingChat]); // Added hasSecretKey dependency
+  }, [user, hasSecretKey, decrypt, isCreatingChat, isChatStorageReady]);
 
   // Close context menu when clicking outside
   useEffect(() => {
@@ -272,27 +222,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
     setContextMenuChatId(null);
 
     try {
-      const response = await fetch("/api/deleteChat", {
+      await ChatStore.deleteChat(chatId);
+
+      // Best-effort removal of any nilDB copy, so a later migration (or one on
+      // another device) doesn't bring the chat back
+      fetch("/api/deleteChat", {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chatId }),
-      });
+      }).catch(() => {});
 
-      if (response.ok) {
-        // Remove from local state
-        setChatHistory((prev) => prev.filter((chat) => chat._id !== chatId));
+      // Remove from local state
+      setChatHistory((prev) => prev.filter((chat) => chat._id !== chatId));
 
-        // Remove from localStorage
-        LocalStorageService.removeChatFromHistory(chatId);
+      // Remove from localStorage
+      LocalStorageService.removeChatFromHistory(chatId);
 
-        // If we're currently viewing the deleted chat, redirect to home
-        if (currentChatId === chatId) {
-          router.push("/app");
-        }
-      } else {
-        console.error("Failed to delete chat");
+      // If we're currently viewing the deleted chat, redirect to home
+      if (currentChatId === chatId) {
+        router.push("/app");
       }
     } catch (error) {
       console.error("Error deleting chat:", error);
@@ -339,30 +287,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
         }
       }
 
-      const response = await fetch("/api/updateChat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          _id: chatId,
-          title: titleToSend,
-        }),
-      });
+      await ChatStore.updateChat(chatId, { title: titleToSend });
 
-      if (response.ok) {
-        // Update local state with the sanitized (unencrypted) title for display
-        setChatHistory((prev) =>
-          prev.map((chat) =>
-            chat._id === chatId ? { ...chat, title: sanitizedTitle } : chat,
-          ),
-        );
+      // Update local state with the sanitized (unencrypted) title for display
+      setChatHistory((prev) =>
+        prev.map((chat) =>
+          chat._id === chatId ? { ...chat, title: sanitizedTitle } : chat,
+        ),
+      );
 
-        // Update localStorage with the sanitized title
-        LocalStorageService.updateChatTitle(chatId, sanitizedTitle);
-      } else {
-        console.error("Failed to rename chat");
-      }
+      // Update localStorage with the sanitized title
+      LocalStorageService.updateChatTitle(chatId, sanitizedTitle);
     } catch (error) {
       console.error("Error renaming chat:", error);
     } finally {
@@ -426,6 +361,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onClose }) => {
       const data = await response.json();
 
       if (response.ok && data.success) {
+        // Remove this user's chats stored on this device
+        await ChatStore.deleteUserData(user.id).catch((error) =>
+          console.error("Error deleting local chats:", error),
+        );
+        clearMigrationFlag(user.id);
         alert("Account deleted successfully. You will be signed out.");
         await signOut();
         router.push("/app");

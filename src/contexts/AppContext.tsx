@@ -9,6 +9,9 @@ import {
   useEffect,
   useState,
 } from "react";
+import { toast } from "sonner";
+import { encryptLegacyPlaintext } from "@/services/ChatStore/encryptLegacyPlaintext";
+import { migrateFromNilDB } from "@/services/ChatStore/migrateFromNilDB";
 import type { IChatItem } from "@/types/chat";
 import { getPersonaFromUTM } from "@/utils/utmPersonaMapping";
 import { getStoredUTMParameters } from "@/utils/utmTracking";
@@ -26,6 +29,7 @@ interface AppContextType {
   setUserSecretKeySeed: (key: string) => void;
   chatHistory: IChatItem[];
   setChatHistory: Dispatch<SetStateAction<IChatItem[]>>;
+  isChatStorageReady: boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -51,6 +55,42 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
 
   const [chatHistory, setChatHistory] = useState<IChatItem[]>([]);
+  const [migratedUserId, setMigratedUserId] = useState<string | null>(null);
+  const userId = user?.isAuthenticated ? user.id : null;
+  const isChatStorageReady = !userId || migratedUserId === userId;
+
+  // Move the user's chats from nilDB to this device before reading local chats
+  useEffect(() => {
+    if (!userId) return;
+
+    let cancelled = false;
+    migrateFromNilDB(userId).then((result) => {
+      if (cancelled) return;
+      if (result.status === "migrated" && result.chatCount > 0) {
+        toast.success(
+          `Moved ${result.chatCount} ${result.chatCount === 1 ? "chat" : "chats"} to this device`,
+        );
+      } else if (result.status === "failed") {
+        toast.warning(
+          "Some chats couldn't be moved to this device. We'll retry next time you open nilGPT.",
+        );
+      }
+      setMigratedUserId(userId);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  // Encrypt any stored messages that are not yet encrypted
+  useEffect(() => {
+    if (!userId || !isChatStorageReady || !userSecretKeySeed) return;
+
+    encryptLegacyPlaintext(userId, userSecretKeySeed).catch((error) =>
+      console.error("Failed to encrypt stored messages:", error),
+    );
+  }, [userId, isChatStorageReady, userSecretKeySeed]);
 
   // Load passphrase from session storage on mount
   useEffect(() => {
@@ -139,6 +179,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setUserSecretKeySeed: setUserSecretKeySeedWithStorage,
     chatHistory,
     setChatHistory,
+    isChatStorageReady,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
 import { getCollectionMetadata } from "@/lib/nildb/getCollectionMetadata";
 import { setupClient } from "@/lib/nildb/setupClient";
+import { isNilDBAvailable } from "@/lib/nildb/status";
 
 export async function GET() {
   try {
+    if (!(await isNilDBAvailable())) {
+      return NextResponse.json(
+        { success: false, error: "nilDB unavailable" },
+        { status: 503 },
+      );
+    }
+
     const builder = await setupClient();
     const result = await getCollectionMetadata(
       builder,
