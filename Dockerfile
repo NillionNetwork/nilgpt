@@ -2,7 +2,7 @@
 FROM node:22-alpine AS base
 
 # Install pnpm globally
-RUN npm install -g pnpm
+RUN npm install -g pnpm@10.14.0
 
 # Install dependencies
 FROM base AS deps
